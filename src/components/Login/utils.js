@@ -48,9 +48,10 @@ function setOpacityAndVisibilityForErrIcon (state, type) {
    * @param {String} type
    * @return void
    */
+  const flag = 'errIcon' + type.substr(0, 1).toUpperCase() + type.substr(1,2);
 
-  state.iconStatus.opacity['errIcon' + type] = 1;
-  state.iconStatus.visibility['errIcon' + type] = 'visible';
+  state.iconStatus.opacity[flag] = 1;
+  state.iconStatus.visibility[flag] = 'visible';
 }
 
 function checkInput (data, type) {
@@ -61,18 +62,17 @@ function checkInput (data, type) {
    * @return Boolean
    */
 
-  const vo = (type != 'Acc') ? 'pasInput' : 'accInput';
-  if (!data.state.loginForm[vo]) {
+  if (!data.state.loginForm[type]) {
     setOpacityAndVisibilityForErrIcon(data.state, type)
-    data.state.formStyle.border[type != 'Acc' ? 'pasInput' : 'accInput'] = 'rgba(255, 0, 0, 0.5)'
-    data.store.commit('message', [3, `请输入${type != 'Acc' ? '密码' : '账号'} !`])
+    data.state.formStyle.border[type] = 'rgba(255, 0, 0, 0.5)'
+    data.store.commit('message', [3, `请输入${type != 'accInput' ? '密码' : '账号'} !`])
     return false
   }
 
-  if (data.state.loginForm[vo].length < 6) {
+  if (data.state.loginForm[type].length < 6) {
     setOpacityAndVisibilityForErrIcon(data.state, type)
-    data.state.formStyle.color.inputText[type != 'Acc' ? 'pasInput' : 'accInput'] = 'rgba(255, 0, 0, 0.5)'
-    data.state.formStyle.border[type != 'Acc' ? 'pasInput' : 'accInput'] = 'rgba(255, 0, 0, 0.8)'
+    data.state.formStyle.color.inputText[type] = 'rgba(255, 0, 0, 0.5)'
+    data.state.formStyle.border[type] = 'rgba(255, 0, 0, 0.8)'
     data.store.commit('message', [3, '字符长度 6~15 !'])
     return false
   }
@@ -87,7 +87,7 @@ function checkLoginInput (data) {
    * @return Boolean
    */
 
-  if (!checkInput(data, 'Acc') || !checkInput(data, 'Pas')) return false
+  if (!checkInput(data, 'accInput') || !checkInput(data, 'pasInput')) return false
   return true
 }
 
