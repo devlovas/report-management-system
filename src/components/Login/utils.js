@@ -22,6 +22,8 @@ function setOpacityAndVisibilityForFocus (state, type) {
   state.iconStatus.visibility['delIcon' + type] = 'visible' 
   state.iconStatus.opacity['errIcon' + type] = 0;
   state.iconStatus.visibility['errIcon' + type] = 'hidden';
+  state.formStyle.border[type != 'Acc' ? 'pasInput' : 'accInput'] = 'rgba(255, 255, 255, 0.5)'
+  state.formStyle.color.inputText[type != 'Acc' ? 'pasInput' : 'accInput'] = 'rgba(44, 62, 80, 0.8)'
 }
 
 function loginFormInputChangeForBlurAndFoucs (state) {
@@ -32,10 +34,10 @@ function loginFormInputChangeForBlurAndFoucs (state) {
    */
 
   return {
-    onFocusOfAccount () { setOpacityAndVisibilityForFocus(state, 'Acc') },
-    onFocusOfPassword () { setOpacityAndVisibilityForFocus(state, 'Pas') },
-    onBlurOfAccount () { setOpacityAndVisibilityForBlur(state, 'Acc') },
-    onBlurOfPassword () { setOpacityAndVisibilityForBlur(state, 'Pas') }
+    onFocusOfaccInput () { setOpacityAndVisibilityForFocus(state, 'Acc') },
+    onFocusOfpasInput () { setOpacityAndVisibilityForFocus(state, 'Pas') },
+    onBlurOfaccInput () { setOpacityAndVisibilityForBlur(state, 'Acc') },
+    onBlurOfpasInput () { setOpacityAndVisibilityForBlur(state, 'Pas') }
   }
 }
 
@@ -59,15 +61,18 @@ function checkInput (data, type) {
    * @return Boolean
    */
 
-  const vo = (type != 'Acc') ? 'password' : 'account';
+  const vo = (type != 'Acc') ? 'pasInput' : 'accInput';
   if (!data.state.loginForm[vo]) {
     setOpacityAndVisibilityForErrIcon(data.state, type)
+    data.state.formStyle.border[type != 'Acc' ? 'pasInput' : 'accInput'] = 'rgba(255, 0, 0, 0.5)'
     data.store.commit('message', [3, `请输入${type != 'Acc' ? '密码' : '账号'} !`])
     return false
   }
 
   if (data.state.loginForm[vo].length < 6) {
     setOpacityAndVisibilityForErrIcon(data.state, type)
+    data.state.formStyle.color.inputText[type != 'Acc' ? 'pasInput' : 'accInput'] = 'rgba(255, 0, 0, 0.5)'
+    data.state.formStyle.border[type != 'Acc' ? 'pasInput' : 'accInput'] = 'rgba(255, 0, 0, 0.8)'
     data.store.commit('message', [3, '字符长度 6~15 !'])
     return false
   }
