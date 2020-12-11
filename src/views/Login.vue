@@ -45,12 +45,15 @@
 <script>
 import { reactive, onMounted } from 'vue';
 import { checkLoginInput, loginFormInputChangeForBlurAndFoucs } from '../components/Login/utils.js'
+import { useStore } from 'vuex'
 
 export default {
   name: 'Login',
   setup () {
     onMounted(() => {
     })
+
+    const store = useStore();
 
     const state = reactive({
       loginForm: {
@@ -85,8 +88,8 @@ export default {
     }
 
     function submitLoginForm (e) {
-      const result = checkLoginInput(state)
-      result && alert('登录成功！')
+      const result = checkLoginInput({state, store})
+      result && store.commit('message', [1, '登录成功 !'])
     }
 
     return { ...state, inputChange, submitLoginForm, 
@@ -157,7 +160,7 @@ export default {
   color: #6B8986
 
 .otherLogin
-  margin: 30px 0
+  margin: 20px 0
   p
     &:nth-child(1)
       font-size: 24px
@@ -178,6 +181,7 @@ export default {
     color: #FFF
 
 h1
+  margin-bottom: 20px
   line-height: 100px
   font-weight: bold
   font-size: 50px

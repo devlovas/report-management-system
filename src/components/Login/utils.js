@@ -51,7 +51,7 @@ function setOpacityAndVisibilityForErrIcon (state, type) {
   state.iconStatus.visibility['errIcon' + type] = 'visible';
 }
 
-function checkInput (state, type) {
+function checkInput (data, type) {
   /**
    * @description: 设置文本框检查规则
    * @param {Object} state 数据
@@ -60,22 +60,29 @@ function checkInput (state, type) {
    */
 
   const vo = (type != 'Acc') ? 'password' : 'account';
-  if (!state.loginForm[vo] || state.loginForm[vo].length < 6) {
-    setOpacityAndVisibilityForErrIcon(state, type)
+  if (!data.state.loginForm[vo]) {
+    setOpacityAndVisibilityForErrIcon(data.state, type)
+    data.store.commit('message', [3, `请输入${type != 'Acc' ? '密码' : '账号'} !`])
+    return false
+  }
+
+  if (data.state.loginForm[vo].length < 6) {
+    setOpacityAndVisibilityForErrIcon(data.state, type)
+    data.store.commit('message', [3, '字符长度 6~15 !'])
     return false
   }
 
   return true
 }
 
-function checkLoginInput (state) {
+function checkLoginInput (data) {
   /**
    * @description: 检查文本框中的数据是否合法
    * @param {Object} state 数据
    * @return Boolean
    */
 
-  if (!checkInput(state, 'Acc') || !checkInput(state, 'Pas')) return false
+  if (!checkInput(data, 'Acc') || !checkInput(data, 'Pas')) return false
   return true
 }
 
