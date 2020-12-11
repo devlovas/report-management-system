@@ -1,15 +1,28 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3.0 + Vite" />
+  <router-view/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  setup (props, context) {
+    onMounted(() => {
+      console.log(context)
+    })
+
+    const route = useRoute();
+    const router = useRouter();
+
+    router.push('/login')
+
+    return {}
   }
 }
 </script>
+
+<style>
+body  
+</style>
