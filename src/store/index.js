@@ -5,20 +5,24 @@ export default createStore({
     notification: {
       message: '通知消息',
       offset: '-20px',
+      timer: null,
       scale: 0,
       type: 0
     }
   },
   mutations: {
     message (state, data) {
-      state.notification.message = data[1]
-      state.notification.offset = '10px'
-      state.notification.scale = 1
-      state.notification.type = data[0]
+      const notification = state.notification
+      notification.message = data[1]
+      notification.offset = '10px'
+      notification.scale = 1
+      notification.type = data[0]
 
-      setTimeout(() => {
-        state.notification.offset = '-20px'
-        state.notification.scale = 0
+      notification.timer && clearTimeout(notification.timer)
+
+      notification.timer = setTimeout(() => {
+        notification.offset = '-20px'
+        notification.scale = 0
       }, 1500)
     }
   }

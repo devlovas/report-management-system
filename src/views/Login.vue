@@ -1,5 +1,5 @@
 <template>
-  <div class='container'>
+  <div class='login'>
     <h1>报表统计系统</h1>
 
     <form class='loginRef' action='#' method='get'>
@@ -112,7 +112,7 @@ export default {
 </script>
 
 <style lang='sass' scoped>
-.container
+.login
   width: 100%
   height: 100%
   background-color: #E798A6

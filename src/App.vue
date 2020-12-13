@@ -14,13 +14,12 @@ export default {
   components: { Notification },
   setup (props, context) {
     onMounted(() => {
-      console.log(context)
     })
 
     const route = useRoute();
     const router = useRouter();
 
-    router.push('/login')
+    // router.push('/login')
 
     return {}
   }
@@ -28,5 +27,4 @@ export default {
 </script>
 
 <style>
-body  
 </style>

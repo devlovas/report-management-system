@@ -1,6 +1,6 @@
 <template>
-  <div class='home'>
-    <h1>Home 页面</h1> 
+  <div class='classify'>
+    <h1>Classify 页面</h1> 
     <foot-tagbar/>
   </div>
 </template>
@@ -8,7 +8,7 @@
 <script>
 import FootTagbar from '../components/FootTagbar.vue'
 export default {
-  name: 'Home',
+  name: 'Classify',
   components: { FootTagbar }
 }
 </script>
