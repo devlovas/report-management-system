@@ -20,8 +20,8 @@ function setOpacityAndVisibilityForFocus (state, type) {
 
   state.iconStatus.opacity['delIcon' + type] = 1
   state.iconStatus.visibility['delIcon' + type] = 'visible' 
-  state.iconStatus.opacity['errIcon' + type] = 0;
-  state.iconStatus.visibility['errIcon' + type] = 'hidden';
+  state.iconStatus.opacity['errIcon' + type] = 0
+  state.iconStatus.visibility['errIcon' + type] = 'hidden'
   state.formStyle.border[type != 'Acc' ? 'pasInput' : 'accInput'] = 'rgba(255, 255, 255, 0.5)'
   state.formStyle.color.inputText[type != 'Acc' ? 'pasInput' : 'accInput'] = 'rgba(44, 62, 80, 0.8)'
 }
@@ -48,10 +48,10 @@ function setOpacityAndVisibilityForErrIcon (state, type) {
    * @param {String} type
    * @return void
    */
-  const flag = 'errIcon' + type.substr(0, 1).toUpperCase() + type.substr(1,2);
+  const flag = 'errIcon' + type.substr(0, 1).toUpperCase() + type.substr(1,2)
 
-  state.iconStatus.opacity[flag] = 1;
-  state.iconStatus.visibility[flag] = 'visible';
+  state.iconStatus.opacity[flag] = 1
+  state.iconStatus.visibility[flag] = 'visible'
 }
 
 function checkInput (data, type) {

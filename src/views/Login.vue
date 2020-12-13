@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted } from 'vue'
 import { checkLoginInput, loginFormInputChangeForBlurAndFoucs } from '../components/Login/utils.js'
 import { useStore } from 'vuex'
 

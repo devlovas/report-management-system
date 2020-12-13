@@ -4,10 +4,10 @@
 </template>
 
 <script>
-import { onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-import Notification from './components/Notification/index.vue';
+import Notification from './components/Notification/index.vue'
 
 export default {
   name: 'App',
@@ -16,8 +16,8 @@ export default {
     onMounted(() => {
     })
 
-    const route = useRoute();
-    const router = useRouter();
+    const route = useRoute()
+    const router = useRouter()
 
     // router.push('/login')
 
