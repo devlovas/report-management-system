@@ -1,6 +1,6 @@
 const _query_db = require('./_mysql_query')
 const { ErrorReply } = require('../model/reply_model')
-const { userLoginAccExistsFail, userLoginPwdExistsFail } = require('../config/message')
+const { userLoginAccExistsFail, userLoginPwdExistsFail } = require('../config/status_code')
 
 function userAccExists (account) {
   /**

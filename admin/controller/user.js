@@ -4,7 +4,7 @@ const { userAccExists, userPacExists } = require('../service/user')
 
 const { userLoginLthFail, 
         userLoginSuccess,
-        userLoginDataFail } = require('../config/message')
+        userLoginDataFail } = require('../config/status_code')
 
 
 function userVerify (data) {
@@ -17,12 +17,12 @@ function userVerify (data) {
   if (isEmpty(data) 
   || !('account' in data) 
   || !('password' in data) 
-  || !data.account.length 
+  || !data.account.length   // 检测用户提交的数据是否为空
   || !data.password.length) return new ErrorReply({...userLoginDataFail, result: null})
 
   if (data.account.length < 6 
   || data.account.length > 20
-  || data.password.length < 6 
+  || data.password.length < 6   // 检测用户提交的数据长度是否合法
   || data.password.length > 20) return new ErrorReply({...userLoginLthFail, result: null})
 }
 
