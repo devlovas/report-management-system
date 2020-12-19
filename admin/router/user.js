@@ -13,7 +13,7 @@ router.post('/login', async (req, res) => {
 
 // 用户注册
 router.post('/register', (req, res) => {
-  res.json(new ErrorReply({...userRegisterFail, result: null}))
+  res.json(new ErrorReply(userRegisterFail))
 })
 
 module.exports = router

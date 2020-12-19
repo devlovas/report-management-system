@@ -4,59 +4,63 @@ const { userAccExists, userPacExists } = require('../service/user')
 
 const { userLoginLthFail, 
         userLoginSuccess,
-        userLoginDataFail } = require('../config/status_code')
+        userLoginDataFail 
+      } = require('../config/status_code')
 
 
-function userVerify (data) {
-  /**
-   * @description: 验证用户提交的数据是否合法
-   * @param {Object} data 客户端请求数据
-   * @return Object Reply_model
-   */
+/*===========================================================
+  用户登录
+===========================================================*/
+{
+  function verifyUserData (data) {
+    /**
+     * @description: 验证用户提交的数据是否合法
+     * @param {Object} data 客户端请求数据
+     * @return Object Reply_model
+     */
 
-  if (isEmpty(data) 
-  || !('account' in data) 
-  || !('password' in data) 
-  || !data.account.length   // 检测用户提交的数据是否为空
-  || !data.password.length) return new ErrorReply({...userLoginDataFail, result: null})
+    // 校验数据是否为空
+    if (isEmpty(data) 
+    || !('account' in data)
+    || !('password' in data)) 
+    { return new ErrorReply(userLoginDataFail) }
 
-  if (data.account.length < 6 
-  || data.account.length > 20
-  || data.password.length < 6   // 检测用户提交的数据长度是否合法
-  || data.password.length > 20) return new ErrorReply({...userLoginLthFail, result: null})
-}
+    // 去除数据前后空格
+    data.account = data.account.trim()
+    data.password= data.password.trim()
 
-function userExists (data) {
-  /**
-   * @description: 检测用户提交的数据在数据库中是否存在
-   * @param {Object} data 客户端请求数据
-   * @return Promise 
-   */
+    // 校验数据长度是否合法
+    if (!data.account.length   
+    ||  !data.password.length
+    || data.account.length < 6 
+    || data.account.length > 20
+    || data.password.length < 6   
+    || data.password.length > 20) 
+    { return new ErrorReply(userLoginLthFail) }
+  }
 
-  return new Promise(async function (resolve, reject) {
-    try {
+  function userLogin (data) {
+    /**
+     * @description: 用户登录处理
+     * @param {Object} data 客户端请求数据
+     * @return Object Promise
+     */
 
-      await userAccExists(data.account)
-      await userPacExists(data.password)
+    const result = verifyUserData(data)
+    if (result && result.err_code) return result
 
-      // 登录成功
-      resolve(new SuccessReply({...userLoginSuccess, result: null}))
+    return new Promise(async function (resolve, reject) {
+      try {
 
-    } catch (e) { reject(e) }
-  })
-}
+        await userAccExists(data.account)
+        await userPacExists(data.password)
 
-function userLogin (data) {
-  /**
-   * @description: 用户登录处理
-   * @param {Object} data 客户端请求数据
-   * @return Object Reply_model
-   */
+        // 登录成功
+        resolve(new SuccessReply(userLoginSuccess))
 
-  const result = userVerify(data)
-  if (result && result.err_code) return result
-
-  return userExists(data)
+      } catch (e) { reject(e) }
+    })
+  }
 }
 
 module.exports = {
