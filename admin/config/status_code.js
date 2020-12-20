@@ -33,7 +33,7 @@ const userStatus = {
 }
 
 
-const categoryStatus = {
+const labelStatus = {
   creatingLabelDataFail: {
     err_code: 3000,
     message: '数据不能为空！'
@@ -49,10 +49,6 @@ const categoryStatus = {
   creatingLabelFail: {
     err_code: 3003,
     message: '添加失败！'
-  },
-  getLabelFail: {
-    err_code: 3010,
-    message: '获取失败, 请重新刷新页面！'
   },
   delLabelDataFail: {
     err_code: 3020,
@@ -74,6 +70,10 @@ const categoryStatus = {
     err_code: 0,
     message: '删除成功！'
   },
+  getLabelFail: {
+    err_code: 3010,
+    message: '获取失败, 请重新刷新页面！'
+  },
   getLabelSuccess: {
     err_code: 0,
     message: '获取成功！'
@@ -84,7 +84,75 @@ const categoryStatus = {
   }
 }
 
+const productStatus = {
+  creatingProductDataFail: {
+    err_code: 4000,
+    message: '数据不能为空！'
+  },
+  creatingProductLthFail: {
+    err_code: 4001,
+    message: '字符长度不符合要求 2 ~ 30！'
+  },
+  creatingProductExistsFail: {
+    err_code: 4002,
+    message: '此产品已存在！'
+  },
+  delProductDataFail: {
+    err_code: 4010,
+    message: '数据不能为空！'
+  },
+  delProductLthFail: {
+    err_code: 4011,
+    message: '字符长度不符合要求 1 ~ 4！'
+  },
+  delProductExistsFail: {
+    err_code: 4012,
+    message: '产品不存在！'
+  },
+  delProductFail: {
+    err_code: 4013,
+    message: '删除失败！'
+  },
+  getProductFail: {
+    err_code: 4020,
+    message: '获取失败, 请重新刷新页面！'
+  },
+  chgProductDataFail: {
+    err_code: 4030,
+    message: '数据不能为空！'
+  },
+  chgProductLthFail: {
+    err_code: 4031,
+    message: '字符长度不符合要求 2 ~ 30！'
+  },
+  chgProductExistsFail: {
+    err_code: 4032,
+    message: '产品不存在！'
+  },
+  chgProductFail: {
+    err_code: 4013,
+    message: '修改失败！'
+  },
+  chgProductSuccess: {
+    err_code: 0,
+    message: '修改成功！'
+  },
+  creatingProductSuccess: {
+    err_code: 0,
+    message: '添加成功！'
+  },
+  delProductSuccess: {
+    err_code: 0,
+    message: '删除成功！'
+  },
+  getProductSuccess: {
+    err_code: 0,
+    message: '获取成功！'
+  }
+}
+
 module.exports = {
   ...userStatus,
-  ...categoryStatus
+  ...labelStatus,
+  ...productStatus
 }
