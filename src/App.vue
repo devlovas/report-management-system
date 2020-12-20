@@ -1,17 +1,17 @@
 <template>
   <router-view/>
-  <notification/>
+  <Dialog/>
 </template>
 
 <script>
 import { onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import Notification from './components/Notification/index.vue'
+import Dialog from '/@/components/Dialog/index.vue'
 
 export default {
   name: 'App',
-  components: { Notification },
+  components: { Dialog },
   setup (props, context) {
     onMounted(() => {
     })
