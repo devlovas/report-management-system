@@ -1,7 +1,7 @@
 <template>
-  <div class='report'>
+  <div class='Category'>
     <Toolbar/>
-    <h1>Report 页面</h1> 
+    <h1>category 页面</h1> 
     <foot-tagbar/>
   </div>
 </template>
@@ -10,7 +10,7 @@
 import Toolbar from '/@/components/Toolbar.vue'
 import FootTagbar from '/@/components/FootTagbar.vue'
 export default {
-  name: 'Report',
+  name: 'Category',
   components: { Toolbar, FootTagbar }
 }
 </script>
