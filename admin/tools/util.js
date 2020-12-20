@@ -1,3 +1,4 @@
+
 function isEmpty (o) {
   /**
    * @description: 检测对象/数组是否为空
@@ -33,7 +34,7 @@ function datetime () {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
 
+
 module.exports = {
-  isEmpty,
-  datetime
+  isEmpty,datetime
 }

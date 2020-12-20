@@ -1,11 +1,9 @@
 const { datetime } = require('../tools/util')
 
 class BaseReply {
-  constructor ({err_code, message, result}) {
-    this.err_code = err_code;
-    this.message = message;
-    this.datetime = datetime();
-    this.result = result;
+  constructor (option) {
+    option = {...option, datetime: datetime(), result: ('result' in option) ? option.result : null}
+    for (var key in option) { this[key] = option[key] }
   }
 }
 
