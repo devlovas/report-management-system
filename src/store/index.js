@@ -11,6 +11,14 @@ export default createStore({
     },
     search: {
       inputHold: false
+    },
+    category: {
+      labels: {
+        data: []
+      },
+      products: {
+        data: []
+      }
     }
   },
   mutations: {
@@ -26,7 +34,13 @@ export default createStore({
       dialog.timer = setTimeout(() => {
         dialog.offset = '-20px'
         dialog.scale = 0
-      }, 1500)
+      }, 1000)
+    },
+    setLabels (state, data) {
+      state.category.labels.data = data
+    },
+    setProducts (state, data) {
+      state.category.products.data = data
     }
   }
 })
