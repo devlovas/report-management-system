@@ -1,3 +1,4 @@
+const { md5 } = require('../tools/util')
 const { ErrorReply } = require('../model/reply_model')
 const { _sql_isExists } = require('./_mysql_query')
 const { userLoginAccExistsFail, userLoginPwdExistsFail, userLoginFail } = require('../config/status_code')
@@ -34,7 +35,7 @@ const { userLoginAccExistsFail, userLoginPwdExistsFail, userLoginFail } = requir
     return new Promise(async function (resolve, reject) {
       try {
 
-        await _sql_isExists('reportcms', 'user', 'PASSWORD', `MD5('${password}')`)
+        await _sql_isExists('reportcms', 'user', 'PASSWORD', md5(password))
         resolve(true)
 
       } catch(e) { reject(new ErrorReply(userLoginPwdExistsFail)) }

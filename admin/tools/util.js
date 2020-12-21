@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 
 function isEmpty (o) {
   /**
@@ -34,7 +35,11 @@ function datetime () {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
 
+function md5 (s) {
+  return crypto.createHash('md5').update(s).digest('hex')
+}
 
 module.exports = {
-  isEmpty,datetime
+  isEmpty,datetime,
+  md5
 }

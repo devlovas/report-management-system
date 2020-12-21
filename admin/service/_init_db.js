@@ -17,13 +17,14 @@ async function main () {
     await _sql('reportcms', `CREATE TABLE IF NOT EXISTS category(\
       ID TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,\
       LABEL CHAR(10) NOT NULL,\
+      TYPE CHAR(2),\
       C_DATETIME TIMESTAMP NOT NULL)`)
 
     // 创建产品表
     await _sql('reportcms',  `CREATE TABLE IF NOT EXISTS product(\
       ID SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,\
       NAME CHAR(30) NOT NULL,\
-      CLASSIFY CHAR(30) NOT NULL,\
+      CLASSIFY CHAR(100),\
       C_DATETIME TIMESTAMP NOT NULL)`)
 
   } catch(e) { console.log(e) }

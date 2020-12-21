@@ -136,19 +136,16 @@ const { delLabelLthFail, delLabelDataFail,
 
     // 校验数据是否为空
     if (isEmpty(data) 
-    || !('name' in data)
-    || !('classify' in data)) 
+    || !('name' in data))
     { return new ErrorReply(creatingProductDataFail) }
 
     // 去除数据前后空格
     data.name = data.name.trim()
-    data.classify = data.classify.trim()
 
     // 校验数据长度是否合法
     if (!data.name.length
     || data.name.length < 2   
-    || data.name.length > 30
-    || data.classify.length > 30) 
+    || data.name.length > 30)
     { return new ErrorReply(creatingProductLthFail) }
   }
 
@@ -264,7 +261,7 @@ const { delLabelLthFail, delLabelDataFail,
     || data.id.length > 4   
     || data.name.length < 2   
     || data.name.length > 30
-    || data.classify.length > 30) 
+    || data.classify.length > 100) 
     { return new ErrorReply(chgProductLthFail) }
   }
 

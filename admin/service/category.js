@@ -49,7 +49,7 @@ const { getLabelFail, getLabelSuccess,
     return new Promise(async (resolve, reject) => {
       try {
         // 将数据插入数据库中
-        await _sql_insert('reportcms', 'category', `(NULL, '${label}', now())`)
+        await _sql_insert('reportcms', 'category', `(NULL, '${label}', NULL, now())`)
         resolve(new SuccessReply({...creatingLabelSuccess, result: (await getLabelData()).result}))
       } catch(e) { reject(new ErrorReply(creatingLabelFail)) }
     })
@@ -126,8 +126,8 @@ const { getLabelFail, getLabelSuccess,
     return new Promise(async (resolve, reject) => {
       try {
         // 将数据插入数据库中
-        await _sql_insert('reportcms', 'product', `(NULL, '${data.name}', '${data.classify}', now())`)
-        resolve(new SuccessReply({...creatingProductSuccess, result: (await getProductAllData()).result}))
+        await _sql_insert('reportcms', 'product', `(NULL, '${data.name}', NULL, now())`)
+        resolve(new SuccessReply({...creatingProductSuccess,  result: (await getProductAllData()).result}))
       } catch(e) { reject(new ErrorReply(creatingProductFail)) }
     })
   }
@@ -142,6 +142,12 @@ const { getLabelFail, getLabelSuccess,
       try{ 
         // 获取表中的全部产品
         const result = await _sql_get('reportcms', 'product')
+
+        for (var i=0; i<result.length; i++) {
+          var cfy = result[i].CLASSIFY
+          result[i].CLASSIFY = cfy ? cfy.split(',').map(v => Number(v)) : []
+        }
+
         resolve(new SuccessReply({...getProductSuccess, result}))
       } catch(e) { reject(new ErrorReply(getProductFail)) }
     })

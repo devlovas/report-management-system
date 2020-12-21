@@ -43,9 +43,10 @@ export default {
 .foot-tagbar
   bottom: 0
   width: 100%
-  height: 60px
+  height: 10%
   position: absolute
-  border-top: 1px solid rgba(0,0,0, 0.2)
+  background-color: #FFF
+  border-top: 0.5px solid rgba(0,0,0, 0.2)
 
 .router-link
   float: left

@@ -37,10 +37,12 @@ export default {
 <style lang='sass' scoped>
 .toolbar
   width: 100%
-  height: 50px
+  height: 10%
   line-height: 50px
   border-bottom: 1px solid rgba(0,0,0, 0.1)
+  background-color: #FFF
   position: relative
+
 
 form
   top: 7.5px
