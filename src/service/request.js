@@ -75,11 +75,24 @@ function chgProductRequest (data) {
   })
 }
 
+function getNumberOfDays (data) {
+  return new Promise((resolve, reject) => {
+    axiosPost({
+      url: '/api/createlog/days/get',
+      data,
+      error (err) { reject(reject(err)) },
+      success (data) { resolve(data) }
+    })
+
+  })
+}
+
 export { 
   userLoginRequest,
   getLabelRequest,
   addLabelRequest,
   getProductRequest,
   addProductRequest,
-  chgProductRequest
+  chgProductRequest,
+  getNumberOfDays
 }
