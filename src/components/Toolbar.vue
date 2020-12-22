@@ -3,7 +3,10 @@
     <form action="#" :style='{width: `${search.inputHold ? 260 : 0}px`, opacity: `${search.inputHold ? 1 : 0}`}'>
       <input type="text" @blur='inputSearchOnBlur'>
     </form>
-    <i class='icon-menu'><svg t="1608297431233" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3989" width="25" height="25"><path d="M 852.11 620 A 108 108 0 1 1 960 512 a 107.94 107.94 0 0 1 -107.89 108 Z M 512 620 a 108 108 0 1 1 107.89 -108 A 107.95 107.95 0 0 1 512 620 Z M 171.89 620 a 108 108 0 1 1 107.88 -108 a 107.94 107.94 0 0 1 -107.88 108 Z" fill="#d81e06" p-id="3990"></path></svg></i>
+    <i class='icon-menu'>
+      <button class='add-items' @click='addItemsClick' v-show='routePath == "/home"'>添加</button>
+      <svg v-show='routePath != "/home"' t="1608297431233" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3989" width="25" height="25"><path d="M 852.11 620 A 108 108 0 1 1 960 512 a 107.94 107.94 0 0 1 -107.89 108 Z M 512 620 a 108 108 0 1 1 107.89 -108 A 107.95 107.95 0 0 1 512 620 Z M 171.89 620 a 108 108 0 1 1 107.88 -108 a 107.94 107.94 0 0 1 -107.88 108 Z" fill="#d81e06" p-id="3990"></path></svg>
+    </i>
     <i class='icon-search' @click='searchSubmit'><svg t="1608296976718" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1451" width="25" height="25"><path d="M942.8 860.4L739.5 652.3c-2-2-4.5-2.9-6.7-4.6 42.6-60 67.9-133.2 67.9-212.4 0-203.1-164.7-367.8-367.8-367.8-203.1 0-367.8 164.7-367.8 367.8C65.1 638.4 229.8 803 432.9 803c84 0 161.1-28.4 223-75.8 1.1 1.3 1.5 2.9 2.7 4.1l203.3 208.1c11 11.3 25.8 17 40.4 17 14.3 0 28.6-5.4 39.6-16.1 22.3-21.7 22.7-57.6 0.9-79.9zM121.7 435.3c0-171.6 139.6-311.2 311.2-311.2s311.2 139.6 311.2 311.2-139.6 311.2-311.2 311.2c-171.6-0.1-311.2-139.6-311.2-311.2z" p-id="1452" fill="#d81e06"></path></svg></i>
   </div>
 </template>
@@ -11,13 +14,17 @@
 <script>
 import { reactive, ref} from 'vue'
 import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
+import { getMaxDays } from '/@/tools/index.js'
 
 export default {
   name: 'Toolbar',
   setup () {
 
+    const route = useRoute()
     const store = useStore()
     const state = reactive({
+      routePath: route.path
     })
 
     function searchSubmit () {
@@ -29,7 +36,12 @@ export default {
       store.state.search.inputHold = !store.state.search.inputHold
     }
 
-    return { ...store.state, searchSubmit, inputSearchOnBlur }
+    function addItemsClick () {
+      getMaxDays(store)
+      store.commit('setCreateLogBoxHold', true)
+    }
+
+    return { ...state, ...store.state, addItemsClick, searchSubmit, inputSearchOnBlur }
   }
 }
 </script>
@@ -74,4 +86,9 @@ input
 
 svg
   vertical-align: middle
+
+.add-items
+  font-size: 18px
+  background-color: ''
+  color: red
 </style>

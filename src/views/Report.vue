@@ -1,7 +1,7 @@
 <template>
   <div class='report'>
     <Toolbar/>
-    <h1>Report 页面</h1> 
+    <h1>页面待开发...</h1> 
     <foot-tagbar/>
   </div>
 </template>
@@ -19,4 +19,11 @@ export default {
 .report
   width: 100%
   height: 100%
+  
+h1
+  top: 50%
+  left: 50%
+  font-size: 32px
+  transform: translate(-50%, -50%)
+  position: absolute
 </style>

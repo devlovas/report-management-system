@@ -12,13 +12,9 @@ export default createStore({
     search: {
       inputHold: false
     },
-    category: {
-      labels: {
-        data: []
-      },
-      products: {
-        data: []
-      }
+    createLog: {
+      boxHold: false,
+      maxDays: 0
     }
   },
   mutations: {
@@ -36,11 +32,11 @@ export default createStore({
         dialog.scale = 0
       }, 1000)
     },
-    setLabels (state, data) {
-      state.category.labels.data = data
+    setCreateLogBoxHold(state, data) {
+      state.createLog.boxHold = data
     },
-    setProducts (state, data) {
-      state.category.products.data = data
+    setMaxDays (state, data) {
+      state.createLog.maxDays = data
     }
   }
 })
