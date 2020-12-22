@@ -151,8 +151,28 @@ const productStatus = {
   }
 }
 
+const createlogStatus = {
+  createlogGetDaysDataFail: {
+    err_code: 5000,
+    message: '数据不能为空！'
+  },
+  createlogGetDaysLthFail: {
+    err_code: 5001,
+    message: '字符长度不符合要求！'
+  },
+  createlogGetDaysFail: {
+    err_code: 5002,
+    message: '天数获取失败！'
+  },
+  createlogGetDaysSuccess: {
+    err_code: 0,
+    message: '天数获取成功'
+  }
+}
+
 module.exports = {
   ...userStatus,
   ...labelStatus,
-  ...productStatus
+  ...productStatus,
+  ...createlogStatus
 }
