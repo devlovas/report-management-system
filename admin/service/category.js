@@ -27,7 +27,7 @@ const { getLabelFail, getLabelSuccess,
   创建分类
 ===========================================================*/
 {
-  function lableNotExists (label) {
+  function lableNotExists (name) {
     /**
      * @description: 将用户提交的数据插入数据库中
      * @param {String} label 数据
@@ -38,18 +38,18 @@ const { getLabelFail, getLabelSuccess,
       try{
 
         // 检测数据在数据库中是否已经存在
-        await _sql_notExists('reportcms', 'category', 'LABEL', label)
+        await _sql_notExists('reportcms', 'category', 'NAME', name)
         resolve(true)
 
       } catch(e) { reject(new ErrorReply(creatingLabelExistsFail)) }
     })
   }
 
-  function insertIntoBase (label) {
+  function insertIntoBase (data) {
     return new Promise(async (resolve, reject) => {
       try {
         // 将数据插入数据库中
-        await _sql_insert('reportcms', 'category', `(NULL, '${label}', NULL, now())`)
+        await _sql_insert('reportcms', 'category', `(NULL, '${data.name}', '${data.type}', now())`)
         resolve(new SuccessReply({...creatingLabelSuccess, result: (await getLabelData()).result}))
       } catch(e) { reject(new ErrorReply(creatingLabelFail)) }
     })

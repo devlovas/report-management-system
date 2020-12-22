@@ -16,8 +16,8 @@ async function main () {
     // 创建分类表
     await _sql('reportcms', `CREATE TABLE IF NOT EXISTS category(\
       ID TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,\
-      LABEL CHAR(10) NOT NULL,\
-      TYPE CHAR(2),\
+      NAME CHAR(10) NOT NULL,\
+      TYPE CHAR(5) NOT NULL,\
       C_DATETIME TIMESTAMP NOT NULL)`)
 
     // 创建产品表

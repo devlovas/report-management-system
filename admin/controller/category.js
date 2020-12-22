@@ -28,16 +28,21 @@ const { delLabelLthFail, delLabelDataFail,
      */
 
     // 校验数据是否为空
-    if (isEmpty(data) || !('label' in data)) 
+    if (isEmpty(data) 
+    || !('name' in data)
+    || !('type' in data)) 
     { return new ErrorReply(creatingLabelDataFail) }
 
     // 去除数据前后空格
-    data.label = data.label.trim()
+    data.name = data.name.trim()
+    data.type = data.type.trim()
 
     // 校验数据长度是否合法
-    if (!data.label.length
-    || data.label.length < 2   
-    || data.label.length > 10) 
+    if (!data.name.length
+    || !data.type.length
+    || data.type.length > 5
+    || data.name.length < 2   
+    || data.type.length > 10) 
     { return new ErrorReply(creatingLabelLthFail) }
   }
 
@@ -56,8 +61,8 @@ const { delLabelLthFail, delLabelDataFail,
 
         // 分类在数据库中不存在
         // 则向数据库中插入数据
-        await lableNotExists(data.label)
-        resolve(await insertIntoBase(data.label))
+        await lableNotExists(data.name)
+        resolve(await insertIntoBase(data))
 
       } catch(e) { reject(e) }
     })
