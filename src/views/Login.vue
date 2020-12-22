@@ -47,8 +47,8 @@ import { dialog } from '/@/tools/index.js'
 import { reactive, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
+import Api from '/@/api/index.js'
 import { useStore } from 'vuex'
-import { userLoginRequest } from '/@/service/request.js'
 import { checkLoginInput, loginFormInputChangeForBlurAndFoucs } from '/@/components/Login/utils.js'
 
 export default {
@@ -108,7 +108,7 @@ export default {
       try {
 
         if (checkLoginInput({state, store})) {
-          const data = await userLoginRequest(state.loginForm)
+          const data = await Api.login(state.loginForm)
 
           if (!data.err_code) {
             dialog(store, 'success', data.message)

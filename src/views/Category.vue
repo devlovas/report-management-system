@@ -47,9 +47,9 @@
 </template>
 
 <script>
+import Api from '/@/api/index.js'
 import Toolbar from '/@/components/Toolbar.vue'
 import FootTagbar from '/@/components/FootTagbar.vue'
-import { getLabelRequest, getProductRequest, addLabelRequest, addProductRequest, chgProductRequest } from '/@/service/request.js'
 
 import { ref, reactive } from 'vue'
 import { useStore } from 'vuex'
@@ -90,12 +90,11 @@ export default {
     }
 
     // 获取分类
-    getLabelRequest()
-    .then(data => { setLabels(data)})
+    Api.get.label().then(data => { setLabels(data)})
     .catch(err => console.log(err))
 
     // 获取品名
-    getProductRequest().then(data => {
+    Api.get.product().then(data => {
       if (!data.err_code && data.result) {
         state.products.data = data.result
         state.products.selected = data.result[0]
@@ -108,8 +107,7 @@ export default {
     }
 
     function addLabelSubmit () {
-      addLabelRequest({name: labelText.value, type: state.labels.crrType})
-      .then(data => {
+      Api.add.label({name: labelText.value, type: state.labels.crrType}).then(data => {
         
         setLabels(data)
 
@@ -128,8 +126,7 @@ export default {
     }
 
     function addProductSubmit () {
-      addProductRequest({name: productText.value})
-      .then(data => {
+      Api.add.product({name: productText.value}).then(data => {
 
         if (!data.err_code && data.result) {
           dialog(store, 'success', data.message) // 打开通知消息
@@ -153,7 +150,7 @@ export default {
         classify = classify.filter(v => v != data.ID) // 去除已有分类ID
       } else { classify.push(data.ID) } // 新增分类ID
 
-      chgProductRequest({
+      Api.chg.product({
         id: selected.ID,
         name: selected.NAME,
         classify: classify.join(',')

@@ -69,10 +69,10 @@
 </template>
 
 <script>
+import Api from '/@/api/index.js'
 import { ref, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { getMaxDays } from '/@/tools/index.js'
-import { getLabelRequest, getProductRequest } from '/@/service/request.js'
 
 Array.prototype.contains = function (v) {
 
@@ -118,15 +118,13 @@ export default {
     })
 
 
-    getLabelRequest()
-    .then(data => {
+    Api.get.label().then(data => {
       if (!data.err_code && data.result) {
         data.result.forEach(label => state.labels[label.TYPE].push(label) )
       }
     }).catch(err => console.log(err))
 
-    getProductRequest()
-    .then(data => {
+    Api.get.product().then(data => {
       if(!data.err_code && data.result) {
         state.product.data = data.result
         state.product.opts = data.result
