@@ -108,7 +108,7 @@ export default {
       try {
 
         if (checkLoginInput({state, store})) {
-          const data = await Api.login(state.loginForm)
+          const data = await Api.user.login(state.loginForm)
 
           if (!data.err_code) {
             dialog(store, 'success', data.message)

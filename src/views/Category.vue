@@ -10,7 +10,7 @@
 
     <div class='labels' v-show='labels.specs.length'>
       <!-- 标签列表 -->
-      <button v-for='data in labels[labels.crrType]' @click='onButtonClick(data)' :style='{backgroundColor: (products.selected.CLASSIFY && products.selected.CLASSIFY.indexOf(data.ID) != -1 ? "#e74c3c": "")}'>
+      <button v-for='data in labels[labels.crrType]' @click='onButtonClick(data)' :style='{backgroundColor: (products.selected.CLASSIFY && products.selected.CLASSIFY.indexOf(data.ID) != -1 ? "#e74c3c": "")}' :key="data.ID">
        {{data.NAME}}
       </button>
 
@@ -27,7 +27,7 @@
 
       <!-- 品名列表 -->
       <ul>
-        <li v-for='(data, index) in products.data' @click='onProductClick(data)' :style='{backgroundColor: products.selected.ID == data.ID ? "#00B26D" : ""}'>
+        <li v-for='(data, index) in products.data' @click='onProductClick(data)' :style='{backgroundColor: products.selected.ID == data.ID ? "#bdc3c7" : ""}' :key='data.ID'>
           {{String(++index).padStart(3, 0)}} : {{data.NAME}}
         </li>
         <li>{{products.data.length + 1}} :</li>
@@ -51,7 +51,7 @@ import Api from '/@/api/index.js'
 import Toolbar from '/@/components/Toolbar.vue'
 import FootTagbar from '/@/components/FootTagbar.vue'
 
-import { ref, reactive } from 'vue'
+import { ref, toRefs, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { dialog } from '/@/tools/index.js'
 export default {
@@ -167,7 +167,7 @@ export default {
       }).catch(err => { console.log(err) })
     }
 
-    return { ...store.state, ...state,
+    return { ...store.state, ...toRefs(state),
       labelText, productText,
       inpLabelElem, inpProductElem,
       addLabelOnClick, addLabelSubmit,
@@ -194,7 +194,9 @@ export default {
     width: 70px
     height: 30px
     margin-right: 10px
+    transition: all .2s ease
     box-shadow: 1px 2px 3px #34495e
+    border-radius: 20px
     font-size: 16px
 
   h2
@@ -205,30 +207,30 @@ export default {
     color: #1a2a3a
 
 
-
-.labels,
-.product
+.labels
   width: 100%
+  height: 25%
   padding: 5px
-  margin-bottom: 10px
+  padding-top: 0
+  background-color: #FFF
+  border-bottom: 10px solid #FFF
   box-sizing: border-box
   text-align: left
   overflow: auto
 
   button
-    margin: 5px
+    width: 70px
     padding: 2px
-    width: 50px
+    margin-right: 2px
+    margin-bottom: 2px
     border-radius: 5px
     display: inline-block
     box-sizing: border-box
     border: 1px solid #aaa
-    background-color: #61687A
+    background-color: #3498db
+    transition: all .5s ease
     font-size: 16px
     color: #FFF
-
-.labels
-  height: 25%
 
 form
   margin-top: 5px
@@ -252,9 +254,15 @@ form
   display: inline-block
 
 .product
+  width: 100%
   height: 45%
+  padding: 5px
+  margin-top: 10px
   padding-bottom: 20px
   box-sizing: border-box
+  background-color: #FFF
+  text-align: left
+  overflow: auto
   li
     width: 100%
     height: 50px
@@ -262,9 +270,11 @@ form
     line-height: 50px
     padding-left: 5px
     border-top: 1px solid #ccc
+    transition: all .5s ease
     box-sizing: border-box
     background-color: #FFF
     overflow: height
+    color: #4a5a6a
 
 .add-product
   margin-top: -45px

@@ -8,16 +8,40 @@
         <button class='btn-change' v-show='false'>修改</button>
       </div>
 
+      <div class='classify'>
+        <div class='cls-title'>
+          <h2>分类：</h2> 
+          <div class='btns-sel'>
+            <button @click='labels.crrType = "specs"' :style='{color: labels.crrType === "specs" ? "#FFF" : "#1a2a3a", backgroundColor: labels.crrType === "specs" ? "#2C97D8" : ""}'>规格</button>
+            <button @click='labels.crrType = "color"' :style='{color: labels.crrType === "color" ? "#FFF" : "#1a2a3a", backgroundColor: labels.crrType === "color" ? "#2C97D8" : ""}'>颜色</button>
+            <button @click='labels.crrType = "other"' :style='{color: labels.crrType === "other" ? "#FFF" : "#1a2a3a", backgroundColor: labels.crrType === "other" ? "#2C97D8" : ""}'>其它</button>
+            <button @click='onButtonTagResetClick' style='color: #4a5a6a'>重置</button>
+          </div>
+        </div>
+        <div class='btns-tag'>
+          <button v-for='data in labels[labels.crrType]' @click='onButtonTagClick(data)' :style='{backgroundColor: labels.opts.indexOf(data.ID) != -1 ? "#EC4C40" : ""}' :key='data.ID'>
+           {{data.NAME}}
+          </button>
+        </div>
+      </div>
+
+      <div class='pro-name'>
+        <h2>品名：</h2>
+        <select>
+          <option :value='data.ID' v-for='(data, idx) in product.opts' :key='data.ID'>{{data.NAME}}</option>
+        </select>
+      </div>
+
       <div class='cre-time'>
         <h2>时间：</h2> 
         <select v-model='creTimeYear' @change='creTimeChange'>
-          <option v-for='i in 7' :value='2018+i'>{{2018 + i}}年</option>
+          <option v-for='i in 7' :value='2018+i' :key="i">{{2018 + i}}年</option>
         </select>
         <select v-model='creTimeMonth' @change='creTimeChange'>
-          <option v-for='i in 12' :value='i'>{{String(i).padStart(2, 0)}}月</option>
+          <option v-for='i in 12' :value='i' :key='i'>{{String(i).padStart(2, 0)}}月</option>
         </select>
         <select v-model='creTimeDay'>
-          <option v-for='i in createLog.maxDays' :value='i'>{{String(i).padStart(2, 0)}}日</option>
+          <option v-for='i in createLog.maxDays' :value='i' :key='i'>{{String(i).padStart(2, 0)}}日</option>
         </select>
       </div>
 
@@ -26,29 +50,6 @@
         <button @click='logsData.type = "检验"' :style='{color: logsData.type === "检验" ? "#FFF" : "#000",backgroundColor: logsData.type === "检验" ? "#2C97D8" : ""}'>检验</button>
         <button @click='logsData.type = "仓库"' :style='{color: logsData.type === "仓库" ? "#FFF" : "#000",backgroundColor: logsData.type === "仓库" ? "#2C97D8" : ""}'>仓库</button>
         <button @click='logsData.type = "主机"' :style='{color: logsData.type === "主机" ? "#FFF" : "#000",backgroundColor: logsData.type === "主机" ? "#2C97D8" : ""}'>主机</button>
-      </div>
-
-      <div class='classify'>
-        <h2>分类：</h2>
-        <select @blur='selectChange' v-model='optActive.specs'>
-          <option :value='0'>规格</option>
-          <option :value='data.ID' v-for='data in labels.specs'>{{data.NAME}}</option>
-        </select>
-        <select @blur='selectChange' v-model='optActive.color'>
-          <option :value='0'>颜色</option>
-          <option :value='data.ID' v-for='data in labels.color'>{{data.NAME}}</option>
-        </select>
-        <select @blur='selectChange' v-model='optActive.other'>
-          <option :value='0'>其它</option>
-          <option :value='data.ID' v-for='data in labels.other'>{{data.NAME}}</option>
-        </select>
-      </div>
-
-      <div class='pro-name'>
-        <h2>品名：</h2>
-        <select>
-          <option :value='data.ID' v-for='(data, idx) in product.opts'>{{data.NAME}}</option>
-        </select>
       </div>
 
       <div class='receives'>
@@ -97,7 +98,9 @@ export default {
       labels: {
         specs: [],
         color: [],
-        other: []
+        other: [],
+        crrType: 'specs',
+        opts: []
       },
       product: {
         data: [],
@@ -136,17 +139,24 @@ export default {
       store.commit('setCreateLogBoxHold', false)
     }
 
-    function selectChange () {
-      const sels = Object.values(state.optActive)
-      if (!sels.length) state.product.opts = state.product.data
+    function onButtonTagClick (data) {
+      if (state.labels.opts.indexOf(data.ID) === -1) { state.labels.opts.push(data.ID) }
+      else { state.labels.opts = state.labels.opts.filter(id => id != data.ID )}
 
-      state.product.opts = []
-
+      state.product.opts = [] // 清空之前数据
       state.product.data.forEach(item => {
-        if (item.CLASSIFY.contains(sels.filter(v => Boolean(v)))) {
+        // 检查labels.opts中的标签ID 是否在product.CLASSIFY中存在
+        if (item.CLASSIFY.contains(state.labels.opts)) {
           state.product.opts.push(item)
         }
       })
+    }
+
+    function onButtonTagResetClick (e) {
+      state.labels.opts = []
+      state.product.opts = state.product.data
+      e.toElement.style.color = 'red'
+      setTimeout(() => e.toElement.style.color = '#4a5a6a', 100)
     }
 
     function creTimeChange (){
@@ -155,7 +165,7 @@ export default {
 
     return { ...state, ...store.state,
       creTimeDay, creTimeYear, creTimeMonth,
-      btnCancelClick, selectChange, creTimeChange }
+      btnCancelClick, onButtonTagClick, onButtonTagResetClick, creTimeChange }
   }
 } 
 </script>
@@ -193,7 +203,6 @@ export default {
 
 .log-type,
 .cre-time,
-.classify,
 .pro-name,
 .receives,
 .residues,
@@ -204,7 +213,7 @@ export default {
   padding-left: 10px
   background-color: #FFF
   box-sizing: border-box
-  margin-top: 10px
+  margin-top: 2px
 
 .btns-top
   width: 100%
@@ -238,7 +247,6 @@ export default {
   box-sizing: border-box
   margin-top: 10px
   h2
-    font-size: 18px
     vertical-align: middle
     display: inline-block
 
@@ -246,6 +254,7 @@ export default {
     width: 70px
     height: 30px
     margin-right: 10px
+    transition: all .2s ease
     box-shadow: 1px 2px 3px #34495e
     font-size: 16px
 
@@ -256,17 +265,54 @@ export default {
     margin-right: 10px
     font-size: 16px
 
-.classify select
-  width: 70px
-  height: 30px
-  margin-right: 10px
-  border: 1px solid #EC4C40
-  font-size: 16px
-  color: #1a2a3a
+.classify 
+  width: 100%
+  height: 150px
+  padding: 10px
+  padding-top: 2px
+  box-sizing: border-box
+  background-color: #FFF
+  .cls-title
+    width: 100%
+    height: 40px
+    border-bottom: 1px solid #ccc
+    box-sizing: border-box
+    h2
+      float: left
+      line-height: 30px
+    .btns-sel button
+      float: left
+      width: 57px
+      height: 30px
+      margin-right: 10px
+      border-radius: 20px
+      box-shadow: 1px 2px 3px #34495e
+      transition: all .2s ease
+      font-size: 16px
+
+  .btns-tag
+    width: 100%
+    height: 100px
+    overflow: auto
+    margin-top: 2px
+    button
+      width: 62px
+      padding: 2px
+      margin-right: 3.5px
+      margin-bottom: 2px
+      border-radius: 5px
+      display: inline-block
+      box-sizing: border-box
+      border: 1px solid #aaa
+      transition: all .5s ease
+      background-color: #3498db
+      font-size: 16px
+      color: #FFF
+
 
 .pro-name select
-  width: 230px
-  height: 30px
+  width: 260px
+  height: 35px
   border: 1px solid #227FB7
   font-size: 16px
   color: #1a2a3a

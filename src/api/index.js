@@ -18,20 +18,21 @@ class Api {
       label () { return _axios('post', null, '/api/category/label/get') },
       product () { return _axios('post', null, '/api/category/product/get') }
     }
-  }
-  
-  login (v) {
-    /**
-     * @description: 发起用户登录请求
-     * @param {Object} data 数据
-     * @return {Object} Promise
-     */
+    this.user = {
+      login (v) {
+        /**
+         * @description: 发起用户登录请求
+         * @param {Object} data 数据
+         * @return {Object} Promise
+         */
 
-    return _axios('post', {
-      account: v.accInput, 
-      password: v.pasInput
-    }, '/api/user/login')
-  }
+        return _axios('post', {
+          account: v.accInput, 
+          password: v.pasInput
+        }, '/api/user/login')
+      }
+    }
+  }  
 }
 
 export default new Api()
