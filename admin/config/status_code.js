@@ -164,6 +164,42 @@ const createlogStatus = {
     err_code: 5002,
     message: '天数获取失败！'
   },
+  addReportDaysDataFail: {
+    err_code: 6000,
+    message: '数据不能为空'
+	},
+  addReportDaysLthFail: {
+    err_code: 6001,
+    message: '字符长度不符合要求！'
+  },
+  addReportDaysLthFail: {
+    err_code: 6001,
+    message: '字符长度不符合要求！'
+  },
+  createRepMonthTableFail: {
+    err_code: 6002,
+    message: '数据库异常！请稍后再试。'
+  },
+  productNameExistsFail: {
+    err_code: 6003,
+    message: '数据库中没有该品名！'
+  },
+  updataRepMonthTableFail: {
+    err_code: 6004,
+    message: '数据更新失败！请稍后再试。'
+  },
+  createRepDaysTableFail: {
+    err_code: 7000,
+    message: '数据库异常！请稍后再试。'
+  },
+  updataRepDaysTableFail: {
+    err_code: 7001,
+    message: '数据更新失败！请稍后再试。'
+  },
+  addReportDaysSuccess: {
+    err_code: 0,
+    message: '添加成功！'
+  },
   createlogGetDaysSuccess: {
     err_code: 0,
     message: '天数获取成功'

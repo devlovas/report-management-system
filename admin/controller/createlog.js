@@ -1,7 +1,12 @@
 const { isEmpty } = require('../tools/util')
 const { getDays } = require('../service/createlog')
-const { ErrorReply } = require('../model/reply_model')
-const { createlogGetDaysDataFail, createlogGetDaysLthFail } = require('../config/status_code')
+const { ErrorReply, SuccessReply } = require('../model/reply_model')
+const { updateReportMonth, updateReportDays } = require('../service/createlog')
+const { createlogGetDaysDataFail, 
+        createlogGetDaysLthFail, 
+        addReportDaysDataFail,
+        addReportDaysSuccess,
+        addReportDaysLthFail } = require('../config/status_code')
 
 /*===========================================================
   获取天数
@@ -43,6 +48,66 @@ const { createlogGetDaysDataFail, createlogGetDaysLthFail } = require('../config
 }
 
 
-module.exports = {
-  getNumberOfDays
+/*===========================================================
+  插入日报
+===========================================================*/
+{
+	function verifyRepirtDays (data) {
+
+    // 校验数据是否为空
+    if (isEmpty(data)
+    || !('name' in data)
+    || !('time' in data)
+    || !('type' in data)
+    || !('rece' in data)
+    || !('resi' in data)
+    || !('comm' in data)
+		)
+    { return new ErrorReply(addReportDaysDataFail) }
+
+    // 去除数据前后空格
+    data.name = data.name.trim()
+    data.time = data.time.trim()
+    data.type = data.type.trim()
+    data.rece = data.rece.trim()
+    data.resi = data.resi.trim()
+    data.comm = data.comm.trim()
+
+    // 校验数据长度是否合法
+    if (!data.name.length
+    || !data.time.length
+    || !data.type.length 
+    || !data.rece.length
+    || !data.resi.length
+    || !data.comm.length
+    || data.name.length > 30
+    || data.time.length > 8
+    || data.type.length > 2
+    || data.rece.length > 8
+    || data.resi.length > 6
+    || data.comm.length > 50)
+    { return new ErrorReply(addReportDaysLthFail) }
+	}
+
+	function addReportDays (data) {
+
+		const result = verifyRepirtDays(data)
+    if (result && result.err_code) return result
+
+    return new Promise(async (resolve, reject) => {
+      try {
+
+        await updateReportDays(data) // 更新日报
+        await updateReportMonth(data) // 更新月报
+
+        resolve(new SuccessReply(addReportDaysSuccess))
+      } catch(e) { reject(e) }
+    })
+	}
 }
+
+module.exports = {
+  getNumberOfDays,
+  addReportDays
+}
+
