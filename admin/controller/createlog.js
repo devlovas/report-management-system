@@ -1,11 +1,20 @@
 const { isEmpty } = require('../tools/util')
 const { getDays } = require('../service/createlog')
 const { ErrorReply, SuccessReply } = require('../model/reply_model')
-const { updateReportMonth, updateReportDays } = require('../service/createlog')
+const { updateReportMonth,
+        updateReportDays,
+        reportDaysTablesIsExists,
+        reportMonthTablesIsExists,
+        getDaysListData, getMonthListData } = require('../service/createlog')
+
 const { createlogGetDaysDataFail, 
         createlogGetDaysLthFail, 
         addReportDaysDataFail,
         addReportDaysSuccess,
+        getDaysListDataFail,
+        getDaysListDataLthFail,
+        getMonthListDataFail,
+        getMonthListDataLthFail,
         addReportDaysLthFail } = require('../config/status_code')
 
 /*===========================================================
@@ -20,7 +29,7 @@ const { createlogGetDaysDataFail,
      */
 
     // 校验数据是否为空
-    if (isEmpty(data) 
+    if (isEmpty(data)
     || !('value' in data))
     { return new ErrorReply(createlogGetDaysDataFail) }
 
@@ -106,8 +115,73 @@ const { createlogGetDaysDataFail,
 	}
 }
 
+/*===========================================================
+  获取日报
+===========================================================*/
+
+function verifyGetReportDaysListData (data) {
+    // 校验数据是否为空
+    if (isEmpty(data)
+    || !('value' in data))
+    { return new ErrorReply(getDaysListDataFail) }
+
+    // 去除数据前后空格
+    data.value = data.value.trim()
+
+    // 校验数据长度是否合法
+    if (!data.value.length
+    || data.value.length > 8)
+    { return new ErrorReply(getDaysListDataLthFail) }
+}
+
+function getReportDaysList (data) {
+  const result = verifyGetReportDaysListData(data)
+  if (result && result.err_code) return result
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      await reportDaysTablesIsExists(data)
+      resolve(await getDaysListData(data))
+    } catch(e) { reject(e) }
+  })
+}
+
+
+/*===========================================================
+  获取月报
+===========================================================*/
+
+function verifyGetReportMonthListData (data) {
+    // 校验数据是否为空
+    if (isEmpty(data)
+    || !('value' in data))
+    { return new ErrorReply(getMonthListDataFail) }
+
+    // 去除数据前后空格
+    data.value = data.value.trim()
+
+    // 校验数据长度是否合法
+    if (!data.value.length
+    || data.value.length > 6)
+    { return new ErrorReply(getMonthListDataLthFail) }
+}
+
+function getReportMonthList (data) {
+  const result = verifyGetReportMonthListData(data)
+  if (result && result.err_code) return result
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      await reportMonthTablesIsExists(data)
+      resolve(await getMonthListData(data))
+    } catch(e) { reject(e) }
+  })
+}
+
 module.exports = {
   getNumberOfDays,
+  getReportDaysList,
+  getReportMonthList,
   addReportDays
 }
 

@@ -166,7 +166,7 @@ const createlogStatus = {
   },
   addReportDaysDataFail: {
     err_code: 6000,
-    message: '数据不能为空'
+    message: '数据不能为空！'
 	},
   addReportDaysLthFail: {
     err_code: 6001,
@@ -196,13 +196,60 @@ const createlogStatus = {
     err_code: 7001,
     message: '数据更新失败！请稍后再试。'
   },
+  getDaysListDataFail: {
+    err_code: 8000,
+    message: '数据不能为空！'
+  },
+  getDaysListDataLthFail: {
+    err_code: 8001,
+    message: '字符长度不符合要求！'
+  },
+  getDaysListTableExistsFail: {
+    err_code: 8002,
+    message: '没有相关数据！'
+  },
+  getDaysListFail: {
+    err_code: 8003,
+    message: '获取失败！'
+  },
+  getMonthListDataFail: {
+    err_code: 8100,
+    message: '数据不能为空！'
+  },
+  getMonthListDataLthFail: {
+    err_code: 8101,
+    message: '字符长度不符合要求！'
+  },
+  getMonthListTableExistsFail: {
+    err_code: 8102,
+    message: '没有相关数据！'
+  },
+  getMonthListFail: {
+    err_code: 8103,
+    message: '获取失败！'
+  },
+  getDaysListSuccess: {
+    err_code: 0,
+    message: '获取成功！'
+  },
+  getMonthListSuccess: {
+    err_code: 0,
+    message: '获取成功！'
+  },
   addReportDaysSuccess: {
     err_code: 0,
     message: '添加成功！'
   },
   createlogGetDaysSuccess: {
     err_code: 0,
-    message: '天数获取成功'
+    message: '天数获取成功!'
+  }
+}
+
+const databaseError = {
+  EdatabaseError: {
+    err_code: 1100,
+    message: '数据库异常！'
   }
 }
 
