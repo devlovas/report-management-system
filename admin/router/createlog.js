@@ -1,7 +1,12 @@
 const express = require('express')
 const router = express.Router()
 
-const { getNumberOfDays, addReportDays, getReportDaysList, getReportMonthList} = require('../controller/createlog')
+const { getNumberOfDays,
+        addReportDays,
+        getReportDaysList,
+        getReportMonthList,
+        delReportDays
+      } = require('../controller/createlog')
 
 // 得到天数
 router.post('/days/get', async (req, res) => {
@@ -12,6 +17,12 @@ router.post('/days/get', async (req, res) => {
 // 添加日报
 router.post('/days/add', async (req, res) => {
   try { res.json(await addReportDays({...req.body})) }
+  catch(e) { res.json(e) }
+})
+
+// 删除日报
+router.post('/days/del', async (req, res) => {
+  try { res.json(await delReportDays({...req.body})) }
   catch(e) { res.json(e) }
 })
 

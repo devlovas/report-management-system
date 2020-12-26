@@ -228,6 +228,18 @@ const createlogStatus = {
     err_code: 8103,
     message: '获取失败！'
   },
+  updateMonthListFail: {
+    err_code: 8201,
+    message: '更新月报失败！'
+  },
+  delReportDaysItemDataFail: {
+    err_code: 8202,
+    message: '删除日报失败！'
+  },
+  delReportDaysItemDataSuccess: {
+    err_code: 0,
+    message: '删除成功！'
+  },
   getDaysListSuccess: {
     err_code: 0,
     message: '获取成功！'

@@ -5,6 +5,8 @@ const { updateReportMonth,
         updateReportDays,
         reportDaysTablesIsExists,
         reportMonthTablesIsExists,
+        updateReportMonthTable,
+        delReportDaysItemData,
         getDaysListData, getMonthListData } = require('../service/createlog')
 
 const { createlogGetDaysDataFail, 
@@ -15,6 +17,7 @@ const { createlogGetDaysDataFail,
         getDaysListDataLthFail,
         getMonthListDataFail,
         getMonthListDataLthFail,
+        delReportDaysItemDataSuccess,
         addReportDaysLthFail } = require('../config/status_code')
 
 /*===========================================================
@@ -108,8 +111,8 @@ const { createlogGetDaysDataFail,
 
         await updateReportDays(data) // 更新日报
         await updateReportMonth(data) // 更新月报
-
-        resolve(new SuccessReply(addReportDaysSuccess))
+        console.log()
+        resolve(new SuccessReply({...addReportDaysSuccess, result: (await getReportDaysList({value: data.time})).result}))
       } catch(e) { reject(e) }
     })
 	}
@@ -178,10 +181,26 @@ function getReportMonthList (data) {
   })
 }
 
+
+/*===========================================================
+  删除日报
+===========================================================*/
+
+function delReportDays (data) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await updateReportMonthTable(data)
+      await delReportDaysItemData(data)
+      resolve(new SuccessReply(delReportDaysItemDataSuccess))
+    } catch(e) { reject(e) }
+  })
+}
+
 module.exports = {
   getNumberOfDays,
   getReportDaysList,
   getReportMonthList,
+  delReportDays,
   addReportDays
 }
 

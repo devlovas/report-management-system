@@ -1,5 +1,5 @@
 const { _sql, _sql_get, _sql_insert, 
-        _sql_isExists, _sql_isBaseExists, 
+        _sql_isExists, _sql_isBaseExists, _sql_del,
         _sql_isNotBaseExists, _sql_upRepMonthTable } = require('./_mysql_query')
 const { ErrorReply, SuccessReply } = require('../model/reply_model')
 const { createlogGetDaysFail,
@@ -14,6 +14,8 @@ const { createlogGetDaysFail,
         getDaysListSuccess,
         getMonthListSuccess,
         getMonthListFail,
+        updateMonthListFail,
+        delReportDaysItemDataFail,
         getMonthListTableExistsFail,
         productNameExistsFail } = require('../config/status_code')
 
@@ -223,9 +225,41 @@ function getMonthListData (data) {
   })
 }
 
+/*===========================================================
+  更新月报
+===========================================================*/
+
+function updateReportMonthTable (data) {
+  if (data.type === '仓库') field = 'WAREHOUSE'
+  if (data.type === '检验') field = 'INSPECTION'
+  if (data.type === '主机') field = 'HOST_MACHINE'
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      await _sql('reportmonth', 'UPDATE '+'`'+data.time.slice(0,6)+'`'+` SET ${field} = ${field} - ${data.value} WHERE NAME = "${data.name}"`)
+      resolve()
+    } catch(e) { reject(new ErrorReply(updateMonthListFail)) }
+  })
+}
+
+/*===========================================================
+  更新日报
+===========================================================*/
+
+function delReportDaysItemData (data) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await _sql_del('reportdays', data.time, 'ID', data.id)
+      resolve()
+    } catch(e) { reject(new ErrorReply(delReportDaysItemDataFail)) }
+  })
+}
+
 module.exports = {
   reportDaysTablesIsExists,
   reportMonthTablesIsExists,
+  updateReportMonthTable,
+  delReportDaysItemData,
   getDaysListData,
   getMonthListData,
   updateReportMonth,
