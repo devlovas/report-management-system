@@ -26,4 +26,5 @@ h1
   font-size: 32px
   transform: translate(-50%, -50%)
   position: absolute
+  opacity: .5
 </style>

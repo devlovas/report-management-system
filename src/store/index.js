@@ -1,5 +1,10 @@
 import { createStore } from 'vuex'
 
+const data = new Date()
+const year = data.getFullYear()
+const month = String(data.getMonth() + 1).padStart(2, 0)
+const day = String(data.getDate()).padStart(2, 0)
+
 export default createStore({
   state: {
     dialog: {
@@ -13,6 +18,8 @@ export default createStore({
       inputHold: false
     },
     createLog: {
+      datatime: [year+month+day, year+month],
+      daysList: [],
       boxHold: false,
       maxDays: 0
     }
@@ -32,8 +39,16 @@ export default createStore({
         dialog.scale = 0
       }, 1000)
     },
-    setCreateLogBoxHold(state, data) {
+    setCreateLogBoxHold (state, data) {
       state.createLog.boxHold = data
+    },
+    setDataTime (state, data) {
+      state.createLog.datatime.forEach((v, i) => {
+        state.createLog.datatime[i] = data[i] != null ? data[i] : v
+      })
+    },
+    setDaysList (state, data) {
+      state.createLog.daysList = data
     },
     setMaxDays (state, data) {
       state.createLog.maxDays = data

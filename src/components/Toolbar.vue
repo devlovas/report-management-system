@@ -1,8 +1,10 @@
 <template>
   <div class='toolbar'>
-    <form action="#" :style='{width: `${search.inputHold ? 260 : 0}px`, opacity: `${search.inputHold ? 1 : 0}`}'>
-      <input type="text" @blur='inputSearchOnBlur'>
-    </form>
+    <div class='searchBox'>
+      <form action="#" :style='{width: `${search.inputHold ? 260 : 0}px`, opacity: `${search.inputHold ? 1 : 0}`}'>
+        <input v-model='inpSearch' type="text" @blur='inputSearchOnBlur'>
+      </form>
+    </div>
     <i class='icon-menu'>
       <button class='add-items' @click='addItemsClick' v-show='routePath == "/home"'>添加</button>
       <svg v-show='routePath != "/home"' t="1608297431233" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3989" width="25" height="25"><path d="M 852.11 620 A 108 108 0 1 1 960 512 a 107.94 107.94 0 0 1 -107.89 108 Z M 512 620 a 108 108 0 1 1 107.89 -108 A 107.95 107.95 0 0 1 512 620 Z M 171.89 620 a 108 108 0 1 1 107.88 -108 a 107.94 107.94 0 0 1 -107.88 108 Z" fill="#d81e06" p-id="3990"></path></svg>
@@ -12,10 +14,16 @@
 </template>
 
 <script>
-import { reactive, ref} from 'vue'
+
+const data = new Date()
+const year = data.getFullYear()
+const month = String(data.getMonth() + 1).padStart(2, 0)
+
+import { reactive, toRefs } from 'vue'
+
 import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
-import { getMaxDays } from '/@/tools/index.js'
+import { useRoute, useRouter } from 'vue-router'
+import { getMaxDays, dialog } from '/@/tools/index.js'
 
 export default {
   name: 'Toolbar',
@@ -24,8 +32,11 @@ export default {
     const route = useRoute()
     const store = useStore()
     const state = reactive({
-      routePath: route.path
+      routePath: route.path,
+      inpSearch: year+month
     })
+
+    const router = useRouter()
 
     function searchSubmit () {
       document.querySelector('input').focus()
@@ -33,6 +44,17 @@ export default {
     }
 
     function inputSearchOnBlur () {
+      const value = state.inpSearch.trim()
+      if (/^\d{8}$/.test(value)) {
+        store.commit('setDataTime', [value, null])
+        router.push('/home')
+      } else if (/^\d{6}$/.test(value)) {
+        store.commit('setDataTime', [null, value])
+        router.push('/report')
+      } else {
+        dialog(store, 'waring', '字符长度有误！')
+      }
+
       store.state.search.inputHold = !store.state.search.inputHold
     }
 
@@ -41,7 +63,7 @@ export default {
       store.commit('setCreateLogBoxHold', true)
     }
 
-    return { ...state, ...store.state, addItemsClick, searchSubmit, inputSearchOnBlur }
+    return { ...toRefs(state), ...store.state, addItemsClick, searchSubmit, inputSearchOnBlur }
   }
 }
 </script>
@@ -55,11 +77,14 @@ export default {
   background-color: #FFF
   position: relative
 
+.searchBox
+  top: 8px
+  right: 40px
+  width: 280px
+  height: 35px
+  position: absolute
 
 form
-  top: 7.5px
-  right: 50px
-  width: 260px
   height: 35px
   border: 1px solid rgba(0,0,0, 0.2)
   border-radius: 30px
@@ -71,7 +96,7 @@ input
   left: 5%
   width: 90%
   height: 100%
-  position: absolute
+  position: absolute 
   color: rgba(44, 62, 80, 0.8)
   text-indent: 15px
   font-size: 18px
@@ -81,7 +106,7 @@ input
   position: absolute
 
 .icon-search
-  right: 60px
+  right: 70px
   position: absolute
 
 svg

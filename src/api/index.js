@@ -3,11 +3,12 @@ import { _axios } from '/@/libs/http.js'
 class Api {
   constructor () {
     this.add = {
+      days (v) { return _axios('post', v, '/api/createlog/days/add') },
       label (v) { return _axios('post', v, '/api/category/label/add') },
       product (v) { return _axios('post', v, '/api/category/product/add') }
     }
     this.del = {
-
+      days (v) { return _axios('post', v, '/api/createlog/days/del') },
     }
     this.chg = {
 
@@ -15,8 +16,10 @@ class Api {
     }
     this.get = {
       days (v) { return _axios('post', v, '/api/createlog/days/get') },
-      label () { return _axios('post', null, '/api/category/label/get') },
-      product () { return _axios('post', null, '/api/category/product/get') }
+      label () { return _axios('post', {}, '/api/category/label/get') },
+      product () { return _axios('post', {}, '/api/category/product/get') },
+      daysList (v) { return _axios('post', v, '/api/createlog/days/list/get') },
+      monthList (v) { return _axios('post', v, '/api/createlog/month/list/get') }
     }
     this.user = {
       login (v) {

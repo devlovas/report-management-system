@@ -3,7 +3,7 @@
     <div class='container'>
       <div class='btns-top'>
         <button class='btn-cancel' @click='btnCancelClick'>取消</button> 
-        <button class='btn-addLog'>添加</button> 
+        <button class='btn-addLog' @click='addReportDaysSubmit'>添加</button> 
         <button class='btn-delete' v-show='false'>删除</button>
         <button class='btn-change' v-show='false'>修改</button>
       </div>
@@ -27,8 +27,8 @@
 
       <div class='pro-name'>
         <h2>品名：</h2>
-        <select>
-          <option :value='data.ID' v-for='(data, idx) in product.opts' :key='data.ID'>{{data.NAME}}</option>
+        <select v-model='logsData.name'>
+          <option :value='data.NAME' v-for='(data, idx) in product.opts' :key='data.ID'>{{data.NAME}}</option>
         </select>
       </div>
 
@@ -47,8 +47,8 @@
 
       <div class='log-type'>
         <h2>类型：</h2> 
-        <button @click='logsData.type = "检验"' :style='{color: logsData.type === "检验" ? "#FFF" : "#000",backgroundColor: logsData.type === "检验" ? "#2C97D8" : ""}'>检验</button>
-        <button @click='logsData.type = "仓库"' :style='{color: logsData.type === "仓库" ? "#FFF" : "#000",backgroundColor: logsData.type === "仓库" ? "#2C97D8" : ""}'>仓库</button>
+        <button @click='logsData.type = "检验"; logsData.resi = 0' :style='{color: logsData.type === "检验" ? "#FFF" : "#000",backgroundColor: logsData.type === "检验" ? "#2C97D8" : ""}'>检验</button>
+        <button @click='logsData.type = "仓库"; logsData.resi = 0' :style='{color: logsData.type === "仓库" ? "#FFF" : "#000",backgroundColor: logsData.type === "仓库" ? "#2C97D8" : ""}'>仓库</button>
         <button @click='logsData.type = "主机"' :style='{color: logsData.type === "主机" ? "#FFF" : "#000",backgroundColor: logsData.type === "主机" ? "#2C97D8" : ""}'>主机</button>
       </div>
 
@@ -58,7 +58,7 @@
       </div>
       <div class='residues'>
         <h2>剩余：</h2> 
-        <input type="text" v-model='logsData.resi'>
+        <input type="text" v-model='logsData.resi' :disabled='logsData.type != "主机"'>
       </div>
       <div class='comments'>
         <h2>备注：</h2> 
@@ -73,7 +73,8 @@
 import Api from '/@/api/index.js'
 import { ref, reactive } from 'vue'
 import { useStore } from 'vuex'
-import { getMaxDays } from '/@/tools/index.js'
+import { useRouter } from 'vue-router'
+import { getMaxDays, dialog } from '/@/tools/index.js'
 
 Array.prototype.contains = function (v) {
 
@@ -112,14 +113,15 @@ export default {
         other: 0
       },
       logsData: {
-        type: '',
         name: '',
+        type: '',
         rece: '0',
         resi: '0',
         comm: '(无)'
       }
     })
 
+    const router = useRouter()
 
     Api.get.label().then(data => {
       if (!data.err_code && data.result) {
@@ -131,6 +133,7 @@ export default {
       if(!data.err_code && data.result) {
         state.product.data = data.result
         state.product.opts = data.result
+        state.logsData.name = data.result[0].NAME
       }
 
     }).catch(err => console.log(err))
@@ -163,8 +166,37 @@ export default {
       getMaxDays(store, creTimeYear.value + String(creTimeMonth.value).padStart(2,0))
     }
 
+    function addReportDaysSubmit (e) {
+      const stateLogsData = state.logsData
+      const createDataTime = String(creTimeYear.value)+creTimeMonth.value+creTimeDay.value
+      e.toElement.style.color = '#777'
+      setTimeout(() => e.toElement.style.color = 'red', 100)
+      if (!stateLogsData.type.length) return dialog(store, 'waring', '请选择类型！')
+      if (!stateLogsData.comm.length) stateLogsData.comm = '(无)'
+      Api.add.days({
+        time: createDataTime,
+        name: stateLogsData.name,
+        type: stateLogsData.type,
+        rece: stateLogsData.rece,
+        resi: stateLogsData.resi,
+        comm: stateLogsData.comm
+      }).then(data => {
+        if (!data.err_code) {
+          dialog(store, 'success', data.message)
+          store.commit('setDataTime', [19000101, null])
+          setTimeout(() => { store.commit('setDataTime', [createDataTime, null]) }, 10)
+          stateLogsData.name = ''
+          stateLogsData.type = ''
+          stateLogsData.rece = '0'
+          stateLogsData.resi = '0'
+          stateLogsData.comm = '(无)'
+        } else dialog(store, 'error', data.message)
+      }).catch(e => console.log(e))
+      store.commit('setCreateLogBoxHold', false)
+    }
+
     return { ...state, ...store.state,
-      creTimeDay, creTimeYear, creTimeMonth,
+      creTimeDay, creTimeYear, creTimeMonth, addReportDaysSubmit,
       btnCancelClick, onButtonTagClick, onButtonTagResetClick, creTimeChange }
   }
 } 

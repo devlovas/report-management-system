@@ -18,7 +18,6 @@ export default {
     onMounted(() => {
     })
 
-    document.cookie = 'name=devlovas'
     const route = useRoute()
     const router = useRouter()
 
