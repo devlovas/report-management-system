@@ -63,6 +63,7 @@ export default {
       store.commit('setCreateLogBoxHold', true)
     }
 
+
     return { ...toRefs(state), ...store.state, addItemsClick, searchSubmit, inputSearchOnBlur }
   }
 }
