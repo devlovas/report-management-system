@@ -95,8 +95,8 @@ const { createlogGetDaysDataFail,
     || data.name.length > 30
     || data.time.length > 8
     || data.type.length > 2
-    || data.rece.length > 8
-    || data.resi.length > 6
+    || data.rece.length > 100
+    || data.resi.length > 100
     || data.comm.length > 50)
     { return new ErrorReply(addReportDaysLthFail) }
 	}
@@ -111,7 +111,6 @@ const { createlogGetDaysDataFail,
 
         await updateReportDays(data) // 更新日报
         await updateReportMonth(data) // 更新月报
-        console.log()
         resolve(new SuccessReply({...addReportDaysSuccess, result: (await getReportDaysList({value: data.time})).result}))
       } catch(e) { reject(e) }
     })

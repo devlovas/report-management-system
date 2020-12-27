@@ -20,6 +20,10 @@ const userStatus = {
     err_code: 1004,
     message: '登录失败！'
   },
+  userAccessrightsError: {
+    err_code: -1,
+    message: '账户过期, 请重新登录！'
+  },
   userLoginSuccess: {
     err_code: 0,
     message: '登录成功！'
@@ -176,16 +180,20 @@ const createlogStatus = {
     err_code: 6001,
     message: '字符长度不符合要求！'
   },
-  createRepMonthTableFail: {
+  addReportMonthReceFail: {
     err_code: 6002,
+    message: '领用栏不数字有误，请重新输入！'
+  },
+  createRepMonthTableFail: {
+    err_code: 6003,
     message: '数据库异常！请稍后再试。'
   },
   productNameExistsFail: {
-    err_code: 6003,
+    err_code: 6004,
     message: '数据库中没有该品名！'
   },
   updataRepMonthTableFail: {
-    err_code: 6004,
+    err_code: 6005,
     message: '数据更新失败！请稍后再试。'
   },
   createRepDaysTableFail: {

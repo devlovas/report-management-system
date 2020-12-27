@@ -136,13 +136,13 @@ function updateReportMonth (data) {
 function createRepDaysTable (data) {
   return new Promise(async (resolve, reject) => {
     try {
-      // 创建月报表
+      // 创建日报表
       await _sql('reportdays',  'CREATE TABLE IF NOT EXISTS ' +'`'+data.tableNameForDays+'`'+`(\
         ID SMALLINT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,\
         NAME CHAR(30) NOT NULL,\
         TYPE CHAR(2) NOT NULL,\
-        RECEIVE INT(8) NOT NULL,\
-        RESIDUE INT(8) NOT NULL,\
+        RECEIVE CHAR(100) NOT NULL,\
+        RESIDUE CHAR(100) NOT NULL,\
         COMMENT CHAR(50) NOT NULL,\
         C_DATETIME TIMESTAMP NOT NULL)`)
 
@@ -154,7 +154,7 @@ function createRepDaysTable (data) {
 function updataRepDaysTable (data) {
   return new Promise(async (resolve, reject) => {
     try {
-      await _sql_insert('reportdays', data.tableNameForDays, `(null, '${data.name}', '${data.type}', ${data.rece}, ${data.resi}, '${data.comm}', now())`)
+      await _sql_insert('reportdays', data.tableNameForDays, `(null, '${data.name}', '${data.type}', '${(data.rece).replaceAll(' ', ',')}', '${data.resi}', '${data.comm}', now())`)
 
       var timer = setInterval(async () => {
         try {

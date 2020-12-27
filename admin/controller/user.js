@@ -39,7 +39,7 @@ const { userLoginLthFail,
     { return new ErrorReply(userLoginLthFail) }
   }
 
-  function userLogin (data) {
+  function userLogin (req, data) {
     /**
      * @description: 用户登录处理
      * @param {Object} data 客户端请求数据
@@ -54,6 +54,8 @@ const { userLoginLthFail,
 
         await userAccExists(data.account)
         await userPacExists(data.password)
+
+        req.session.loginFlag = true // 记录登录状态
 
         // 登录成功
         resolve(new SuccessReply(userLoginSuccess))
