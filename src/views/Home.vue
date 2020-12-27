@@ -1,7 +1,6 @@
 <template>
   <div class='home'>
     <Toolbar/>
-    <div class='masking' v-show='createLog.boxHold'></div> 
     <div class='reportDays' style='height: 100%'>
       <div style='height: 100%'>
 
@@ -29,7 +28,7 @@
               <div><span>领用</span></div>
               <div><span>剩余</span></div>
               <div><span>备注</span></div>
-              <div><span>更新时间</span></div>
+              <div><span>创建时间</span></div>
             </li>
             <li v-for='(item, idx) in daysList[daysList.type]' @click='daysList.sels = item; btnDelItem.show = true' :style='{backgroundColor: daysList.sels && item.ID == daysList.sels.ID ? "#ccc" : ""}' :key='item.ID'>
               <div><span style='left: 5px'>{{String(idx+1).padStart(3, 0)}}</span></div>
@@ -48,6 +47,7 @@
         <h2 class='time'>{{datatime}}</h2>
       </div>
     </div>
+    <div class='masking' v-show='createLog.boxHold'></div>
     <foot-tagbar/>
   </div>
 </template>
@@ -57,8 +57,9 @@ import Toolbar from '/@/components/Toolbar.vue'
 import FootTagbar from '/@/components/FootTagbar.vue'
 
 import Api from '/@/api/index.js'
-import { getDateTimeFormat, getDaysListData, dialog} from '/@/tools/index.js'
+import { getDateTimeFormat, getDaysListData, isUserLogin, dialog} from '/@/tools/index.js'
 import { reactive, toRefs, computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 export default {
   name: 'Home',
@@ -79,6 +80,8 @@ export default {
       }
     })
 
+    const router = useRouter()
+
     const datatime = computed(() => {
       var t = String(store.state.createLog.datatime[0])
       return t.slice(0,4)+'年'+t.slice(4,6)+'月'+t.slice(-2)+'日'
@@ -93,15 +96,19 @@ export default {
     watch (() => { return store.state.createLog.datatime[0]
     }, () => { getDaysListData(state, store) })
 
-    function delItemData () {
+    function delItemData (e) {
+      e.toElement.style.color = '#777'
+      setTimeout(() => { e.toElement.style.color = '#F00'}, 100)
+      if (!state.daysList.sels) return
       Api.del.days({
         id: state.daysList.sels.ID,
         name: state.daysList.sels.NAME,
         type: state.daysList.sels.TYPE,
         time: store.state.createLog.datatime[0],
-        value: state.daysList.sels.RECEIVE
+        value: (state.daysList.sels.RECEIVE).split(',').reduce((a,b) => Number(a) + Number(b))
       })
       .then(data => {
+        if (!isUserLogin(router, store, data)) return
         if (!data.err_code) {
           dialog(store, 'success', data.message)
           getDaysListData(state, store)
@@ -163,7 +170,6 @@ export default {
   margin-top: 10px
   transition: all .5s ease
   margin-right: 30px !important
-  border-radius: 0 !important
   color: #F00
 
 .dataList
@@ -203,7 +209,6 @@ export default {
     height: 50px
     display: flex
     font-size: 18px
-    overflow:auto
     line-height: 50px
     padding-left: 5px
     border-bottom: 1px solid #ccc

@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class='login'>
     <h1>报表统计系统</h1>
 
@@ -112,6 +112,7 @@ export default {
 
           if (!data.err_code) {
             dialog(store, 'success', data.message)
+            localStorage.setItem('loginFlag', 1)
             setTimeout(() => router.push('/home'), 1500)
           }
           else dialog(store, 'error', data.message)

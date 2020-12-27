@@ -45,17 +45,28 @@ function getDaysListData (state, store) {
   }).catch(e => { console.log(e)})
 }
 
-function getMonthListData (state, store) {
+function getMonthListData (router, store, state) {
     Api.get.monthList({value: store.state.createLog.datatime[1]})
     .then(data => {
+      if (!isUserLogin(router, store, data)) return
       state.monthList.data = []
       if (!data.err_code) state.monthList.data = data.result
     }).catch(e => { console.log(e)})
 }
 
+function isUserLogin (router, store, data) {
+  if(data.err_code == -1) {
+    localStorage.setItem('loginFlag', 0)
+    dialog(store, 'error', data.message)
+    router.push('/login')
+    return false
+  }
+  return true
+}
 
 export { dialog,
          getMaxDays,
+         isUserLogin,
          getDateTimeFormat,
          getDaysListData,
          getMonthListData

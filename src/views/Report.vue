@@ -13,9 +13,9 @@
             <div><span style='left: 2px'>序号</span></div>
             <div><span>品名</span></div>
             <div><span>上期结存</span></div>
-            <div><span>仓库</span></div>
-            <div><span>检验</span></div>
-            <div><span>主机</span></div>
+            <div><span>仓库付出</span></div>
+            <div><span>检验付出</span></div>
+            <div><span>主机付出</span></div>
             <div><span>本期结存</span></div>
             <div><span>更新时间</span></div>
           </li>
@@ -44,9 +44,9 @@
 import Toolbar from '/@/components/Toolbar.vue'
 import FootTagbar from '/@/components/FootTagbar.vue'
 
-import Api from '/@/api/index.js'
 import { getDateTimeFormat, getMonthListData } from '/@/tools/index.js'
 import { reactive, toRefs, computed, watch} from 'vue'
+import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 export default {
   name: 'Home',
@@ -59,20 +59,21 @@ export default {
       }
     })
 
+    const router = useRouter()
+
     const datatime = computed(() => {
       var t = String(store.state.createLog.datatime[1])
       return t.slice(0,4)+'年'+t.slice(4,6)+'月'
     })
 
-    getMonthListData(state, store)
-    // store.commit('setDataTime', [20201210, null])
+    getMonthListData(router, store, state)
 
     function dateTimeFormat (data) {
       return getDateTimeFormat(new Date(data))
     }
 
     watch (() => { return store.state.createLog.datatime[1]
-    }, () => { getMonthListData(state, store) })
+    }, () => { getMonthListData(router, store, state) })
 
     return { ...toRefs(state), ...store.state, datatime, dateTimeFormat}
   }
@@ -148,7 +149,6 @@ export default {
     height: 50px
     display: flex
     font-size: 18px
-    overflow:auto
     line-height: 50px
     padding-left: 5px
     border-bottom: 1px solid #ccc

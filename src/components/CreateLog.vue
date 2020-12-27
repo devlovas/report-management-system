@@ -71,10 +71,10 @@
 
 <script>
 import Api from '/@/api/index.js'
-import { ref, reactive } from 'vue'
+import { ref, watch, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { getMaxDays, dialog } from '/@/tools/index.js'
+import { getMaxDays, isUserLogin, dialog } from '/@/tools/index.js'
 
 Array.prototype.contains = function (v) {
 
@@ -124,18 +124,19 @@ export default {
     const router = useRouter()
 
     Api.get.label().then(data => {
+      if (!isUserLogin(router, store, data)) return
       if (!data.err_code && data.result) {
         data.result.forEach(label => state.labels[label.TYPE].push(label) )
       }
     }).catch(err => console.log(err))
 
     Api.get.product().then(data => {
+      if (!isUserLogin(router, store, data)) return
       if(!data.err_code && data.result) {
         state.product.data = data.result
         state.product.opts = data.result
         state.logsData.name = data.result[0].NAME
       }
-
     }).catch(err => console.log(err))
 
     function btnCancelClick () {
@@ -181,6 +182,7 @@ export default {
         resi: stateLogsData.resi,
         comm: stateLogsData.comm
       }).then(data => {
+        if (!isUserLogin(router, store, data)) return
         if (!data.err_code) {
           dialog(store, 'success', data.message)
           store.commit('setDataTime', [19000101, null])
@@ -192,8 +194,34 @@ export default {
           stateLogsData.comm = '(无)'
         } else dialog(store, 'error', data.message)
       }).catch(e => console.log(e))
+
       store.commit('setCreateLogBoxHold', false)
     }
+
+    watch(() => {
+      return store.state.createLog.boxHold
+    }, (v) => {
+      if (v) {
+
+        getMaxDays(store, creTimeYear.value + String(creTimeMonth.value).padStart(2,0))
+
+        Api.get.label().then(data => {
+          if (!isUserLogin(router, store, data)) return
+          if (!data.err_code && data.result) {
+            data.result.forEach(label => state.labels[label.TYPE].push(label) )
+          }
+        }).catch(err => console.log(err))
+
+        Api.get.product().then(data => {
+          if (!isUserLogin(router, store, data)) return
+          if(!data.err_code && data.result) {
+            state.product.data = data.result
+            state.product.opts = data.result
+            state.logsData.name = data.result[0].NAME
+          }
+        }).catch(err => console.log(err))
+      }
+    })
 
     return { ...state, ...store.state,
       creTimeDay, creTimeYear, creTimeMonth, addReportDaysSubmit,

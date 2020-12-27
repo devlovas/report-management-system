@@ -51,14 +51,16 @@ import Api from '/@/api/index.js'
 import Toolbar from '/@/components/Toolbar.vue'
 import FootTagbar from '/@/components/FootTagbar.vue'
 
-import { ref, toRefs, reactive } from 'vue'
 import { useStore } from 'vuex'
-import { dialog } from '/@/tools/index.js'
+import { useRouter } from 'vue-router'
+import { ref, toRefs, reactive } from 'vue'
+import { dialog, isUserLogin } from '/@/tools/index.js'
 export default {
   name: 'Category',
   components: { Toolbar, FootTagbar },
   setup () {
     const store = useStore()
+    const router = useRouter()
     const inpLabelElem = ref(null)
     const inpProductElem = ref(null)
 
@@ -90,11 +92,14 @@ export default {
     }
 
     // 获取分类
-    Api.get.label().then(data => { setLabels(data)})
-    .catch(err => console.log(err))
+    Api.get.label().then(data => {
+      if (!isUserLogin(router, store, data)) return
+      setLabels(data)
+    }).catch(err => console.log(err))
 
     // 获取品名
     Api.get.product().then(data => {
+      if (!isUserLogin(router, store, data)) return
       if (!data.err_code && data.result) {
         state.products.data = data.result
         state.products.selected = data.result[0]
@@ -108,7 +113,7 @@ export default {
 
     function addLabelSubmit () {
       Api.add.label({name: labelText.value, type: state.labels.crrType}).then(data => {
-        
+        if (!isUserLogin(router, store, data)) return
         setLabels(data)
 
         if (!data.err_code && data.result) {
@@ -127,6 +132,7 @@ export default {
 
     function addProductSubmit () {
       Api.add.product({name: productText.value}).then(data => {
+        if (!isUserLogin(router, store, data)) return
 
         if (!data.err_code && data.result) {
           dialog(store, 'success', data.message) // 打开通知消息
@@ -156,6 +162,7 @@ export default {
         classify: classify.join(',')
       })
       .then(data => {
+        if (!isUserLogin(router, store, data)) return
 
         if (!data.err_code && data.result) {
           state.products.data = data.result 
