@@ -19,7 +19,7 @@
           </div>
         </div>
         <div class='btns-tag'>
-          <button v-for='data in labels[labels.crrType]' @click='onButtonTagClick(data)' :style='{backgroundColor: labels.opts.indexOf(data.ID) != -1 ? "#EC4C40" : ""}' :key='data.ID'>
+          <button v-for='data in labels[labels.crrType]' @click='onButtonTagClick(data)' :style='{backgroundColor: labels.opts.indexOf(data.ID) != -1 ? "#EC4C40" : ""}'>
            {{data.NAME}}
           </button>
         </div>
@@ -28,7 +28,7 @@
       <div class='pro-name'>
         <h2>品名：</h2>
         <select v-model='logsData.name'>
-          <option :value='data.NAME' v-for='(data, idx) in product.opts' :key='data.ID'>{{data.NAME}}</option>
+          <option :vlue='data.NAME' v-for='(data, idx) in product.opts'>{{data.NAME}}</option>
         </select>
       </div>
 
@@ -135,7 +135,6 @@ export default {
       if(!data.err_code && data.result) {
         state.product.data = data.result
         state.product.opts = data.result
-        state.logsData.name = data.result[0].NAME
       }
     }).catch(err => console.log(err))
 
@@ -154,6 +153,9 @@ export default {
           state.product.opts.push(item)
         }
       })
+
+      // 设置option 默认选中
+      state.logsData.name = state.product.opts.length ? state.product.opts[0].NAME : ''
     }
 
     function onButtonTagResetClick (e) {
@@ -172,6 +174,7 @@ export default {
       const createDataTime = String(creTimeYear.value)+creTimeMonth.value+creTimeDay.value
       e.toElement.style.color = '#777'
       setTimeout(() => e.toElement.style.color = 'red', 100)
+      if (!stateLogsData.name.length) return dialog(store, 'waring', '请选择品名！')
       if (!stateLogsData.type.length) return dialog(store, 'waring', '请选择类型！')
       if (!stateLogsData.comm.length) stateLogsData.comm = '(无)'
       Api.add.days({

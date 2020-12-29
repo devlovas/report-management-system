@@ -63,8 +63,8 @@ export default {
 
     const state = reactive({
       loginForm: {
-        accInput: '13517438529',
-        pasInput: '13517438529'
+        accInput: '',
+        pasInput: ''
       },
       iconStatus: {
         opacity: {
@@ -114,7 +114,7 @@ export default {
             dialog(store, 'success', data.message)
             localStorage.setItem('loginFlag', 1)
             setTimeout(() => router.push('/home'), 1500)
-          }
+          } 
           else dialog(store, 'error', data.message)
         }
 

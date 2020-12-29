@@ -56,6 +56,7 @@ function createRepMonthTable (tableName) {
         HOST_MACHINE INT(8) NOT NULL,
         PREV_BALANCE INT(8) NOT NULL,\
         CURR_BALANCE INT(8) NOT NULL,\
+        CLASSIFY CHAR(100),\
         C_DATETIME TIMESTAMP NOT NULL)`)
 
 
@@ -68,7 +69,7 @@ function createRepMonthTable (tableName) {
         // 当product 表中的数据没有发生变化, 则用reportmonth数据库表中的数据
         if (a1.join(',') === a2.join(',')) {
           (await _sql_get('reportmonth', tableName-1)).forEach(async i => {
-            await _sql_insert('reportmonth', tableName, `(${i.ID}, '${i.NAME}', 0, 0, 0, ${i.CURR_BALANCE}, 0, now())`)
+            await _sql_insert('reportmonth', tableName, `(${i.ID}, '${i.NAME}', 0, 0, 0, ${i.CURR_BALANCE}, 0, '${i.CLASSIFY}', now())`)
           })
         }
 
@@ -77,14 +78,14 @@ function createRepMonthTable (tableName) {
             var CURR_BALANCE = 0
             const result = await _sql('reportmonth', 'SELECT CURR_BALANCE FROM '+'`'+(tableName-1)+'`'+` WHERE ID = ${i.ID}`)
             if (result.length) CURR_BALANCE = result[0].CURR_BALANCE
-            await _sql_insert('reportmonth', tableName, `(${i.ID}, '${i.NAME}', 0, 0, 0, ${CURR_BALANCE}, 0, now())`)
+            await _sql_insert('reportmonth', tableName, `(${i.ID}, '${i.NAME}', 0, 0, 0, ${CURR_BALANCE}, 0, '${i.CLASSIFY}', now())`)
           })
         }
       }
 
       else {
         (await _sql_get('reportcms', 'product')).forEach(async i => {
-          await _sql_insert('reportmonth', tableName, `(${i.ID}, '${i.NAME}', 0, 0, 0, 0, 0, now())`)
+          await _sql_insert('reportmonth', tableName, `(${i.ID}, '${i.NAME}', 0, 0, 0, 0, 0, '${i.CLASSIFY}', now())`)
         })
       }
 
@@ -102,8 +103,13 @@ function createRepMonthTable (tableName) {
 function productNameIsExists (data) {
   return new Promise(async (resolve, reject) => {
     try {
-      await _sql_isExists('reportmonth', data.tableNameForMonth, 'NAME', data.name)
-      resolve()
+      _sql_isExists('reportmonth', data.tableNameForMonth, 'NAME', data.name)
+      .then(e => resolve())
+      .catch(async e =>  {
+        const result = await _sql_get('reportcms', 'product', '*', `where NAME = '${data.name}'`)
+        await _sql_insert('reportmonth', data.tableNameForMonth, `(${result[0].ID}, '${result[0].NAME}', 0, 0, 0, 0, 0, '${result[0].CLASSIFY}', now())`)
+        resolve()
+      })
     } catch(e) { reject(new ErrorReply(productNameExistsFail)) }
   })
 }
@@ -220,6 +226,12 @@ function getMonthListData (data) {
     try {
       // 获取表中的全部分类
       const result = await _sql_get('reportmonth', data.value)
+
+      for (var i=0; i<result.length; i++) {
+        var cfy = result[i].CLASSIFY
+        result[i].CLASSIFY = cfy ? cfy.split(',').map(v => Number(v)) : []
+      }
+
       resolve(new SuccessReply({...getMonthListSuccess, result}))
     } catch(e) { reject(new ErrorReply(getMonthListFail)) }
   })

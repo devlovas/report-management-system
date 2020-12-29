@@ -109,8 +109,8 @@ const { createlogGetDaysDataFail,
     return new Promise(async (resolve, reject) => {
       try {
 
-        await updateReportDays(data) // 更新日报
         await updateReportMonth(data) // 更新月报
+        await updateReportDays(data) // 更新日报
         resolve(new SuccessReply({...addReportDaysSuccess, result: (await getReportDaysList({value: data.time})).result}))
       } catch(e) { reject(e) }
     })

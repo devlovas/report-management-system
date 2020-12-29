@@ -1,4 +1,4 @@
-function setOpacityAndVisibilityForBlur (state, type) {
+  function setOpacityAndVisibilityForBlur (state, type) {
   /**
    * @description: 文本框失去焦点
    * @param {Object} state 数据
@@ -65,7 +65,7 @@ function checkInput (data, type) {
   if (!data.state.loginForm[type]) {
     setOpacityAndVisibilityForErrIcon(data.state, type)
     data.state.formStyle.border[type] = 'rgba(255, 0, 0, 0.5)'
-    data.store.commit('message', [3, `请输入${type != 'accInput' ? '密码' : '账号'} !`])
+    data.store.commit('dialog', [3, `请输入${type != 'accInput' ? '密码' : '账号'} !`])
     return false
   }
 
@@ -73,7 +73,7 @@ function checkInput (data, type) {
     setOpacityAndVisibilityForErrIcon(data.state, type)
     data.state.formStyle.color.inputText[type] = 'rgba(255, 0, 0, 0.5)'
     data.state.formStyle.border[type] = 'rgba(255, 0, 0, 0.8)'
-    data.store.commit('message', [3, '字符长度 6~15 !'])
+    data.store.commit('dialog', [3, '字符长度 6~15 !'])
     return false
   }
 

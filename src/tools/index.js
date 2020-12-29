@@ -49,8 +49,13 @@ function getMonthListData (router, store, state) {
     Api.get.monthList({value: store.state.createLog.datatime[1]})
     .then(data => {
       if (!isUserLogin(router, store, data)) return
-      state.monthList.data = []
-      if (!data.err_code) state.monthList.data = data.result
+      state.product.data = []
+      state.product.opts = []
+      if (!data.err_code) {
+        state.product.data = data.result
+        state.product.opts = data.result
+      }
+
     }).catch(e => { console.log(e)})
 }
 

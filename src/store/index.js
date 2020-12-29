@@ -37,7 +37,7 @@ export default createStore({
       dialog.timer = setTimeout(() => {
         dialog.offset = '-20px'
         dialog.scale = 0
-      }, 1000)
+      }, 1500)
     },
     setCreateLogBoxHold (state, data) {
       state.createLog.boxHold = data

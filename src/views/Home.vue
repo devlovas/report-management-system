@@ -232,7 +232,6 @@ export default {
     margin-top: 20px
     margin-left: 5px
     font-size: 25px !important
-    background-color: #ecf0f1
     opacity: .5
 
 .masking
