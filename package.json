@@ -13,7 +13,7 @@
     "vuex": "^4.0.0-rc.2"
   },
   "devDependencies": {
-    "@vue/compiler-sfc": "^3.0.4",
+    "@vue/compiler-sfc": "^3.2.45",
     "esbuild": "^0.8.21",
     "node-sass": "^5.0.0",
     "sass-loader": "^10.1.0",
